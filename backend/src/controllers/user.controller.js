@@ -2,7 +2,7 @@ const userModel=require('../models/User')
 const passwordHashing = require('../utils/passwordHashing.utils')
 const generateToken = require('../utils/token.utils')
 const tokenModel= require('../models/tokens.model')
-
+const bcryptjs= require("bcryptjs")
 
 const userRegister= async (req,res) => {
     try {
@@ -32,7 +32,11 @@ const userRegister= async (req,res) => {
 
         const token= generateToken(user._id , email)
 
-        res.cookie("token",token)
+        res.cookie("token",token,{
+            httpOnly:true,
+            secure:true,
+            sameSite:"strict"
+        })
 
         res.status(200).json({
             message:"User Is Created",
@@ -60,8 +64,14 @@ const userLogin= async (req,res) => {
             email
         })
 
-        if(!user) return res.status(200).json({
+        if(!user) return res.status(404).json({
             message:"No User Has Found "
+        })
+
+        const isMatch= await bcryptjs.compare(password,user.password)
+
+        if(!isMatch) return res.status(401).json({
+            message:"not password matched "
         })
 
         res.status(200).json({

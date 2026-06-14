@@ -22,7 +22,9 @@ const authMiddleware= async (req,res,next) => {
 
     } catch (error) {
         console.log(`some Error In ${error}`);
-        process.exit(1);
+        return res.status(401).json({
+            message:"Unautherised"
+        })
     }
 }
 

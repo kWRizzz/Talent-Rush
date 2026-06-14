@@ -10,7 +10,9 @@ const generateToken= async (userId,userEmail) => {
         return token
     } catch (error) {
         console.log(`some Error generated While Genarating the token ${error}`);
-        process.exit(1)
+         return res.status(401).json({
+            message:"Unautherised"
+        })
     }
 }
 
