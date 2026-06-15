@@ -9,9 +9,7 @@ const passwordHashing = async (password) => {
         return hashedPassword
     } catch (error) {
         console.log(`some error in hashing the passwor ${error}`);
-        return res.status(401).json({
-            message: "Unautherised"
-        })
+        throw new Error("Token Generation Failed")
     }
 }
 

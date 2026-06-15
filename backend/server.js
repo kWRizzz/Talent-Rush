@@ -4,9 +4,7 @@ const connectDB=require('./src/lib/db')
 const cors= require("cors")
 const cookiepareser=require('cookie-parser')
 const userRouter=require('./src/routes/user.routes')
-const { serve } = require("inngest/express")
-const { inngest } = require("./src/lib/inngest")
-const { syncUser, deletUser } = require("./src/inngest/functions")
+
 const path=require('path')
 
 dotenv.config()
@@ -21,18 +19,15 @@ app.use(cors({
     origin:process.env.CLIENT_URL,
     credentials:true
 }))
-app.use('/api/inngest',serve({
-    client:inngest,
-    functions:[syncUser,deletUser]
-}))
+
 app.use(cookiepareser())
 
 app.use('/api/user',userRouter)
 
 
-/*
-**@Route=Test apis
-**
+/**
+* @Route Test apis
+*
 */
 
 app.get('/test1',(req,res)=>{
@@ -40,9 +35,10 @@ app.get('/test1',(req,res)=>{
 })
 
 
-/*
-**@Route=Test apis
-**
+/**
+ * 
+* @Route Test apis
+*
 */
 
 app.get('/test2',(req,res)=>{
@@ -51,13 +47,13 @@ app.get('/test2',(req,res)=>{
 
 // app for production ready state
 
-if(process.env.NODE_ENV==="production"){
-    app.use(express.static(path.join(_dirname,"../frontend/dist")))
+// if(process.env.NODE_ENV==="production"){
+//     app.use(express.static(path.join(_dirname,"../frontend/dist")))
 
-    app.get("/{*any}",(req,res)=>{
-        res.sendFile(path.join(_dirname,"..frontend","dist","index.html"))
-    })
-}
+//     app.get("/{*any}",(req,res)=>{
+//         res.sendFile(path.join(_dirname,"..frontend","dist","index.html"))
+//     })
+// }
 
 
 app.listen(process.env.PORT,()=>{

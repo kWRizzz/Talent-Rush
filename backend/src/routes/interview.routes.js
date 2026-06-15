@@ -1,43 +1,19 @@
-const mongoose = require('mongoose')
+const express=require('express')
+const interviewController= require("../controllers/interview.controller")
+const authMiddleware= require('../middleware/auth.middleware')
 
-const interviewSchema = new mongoose.Schema(
-    {
-        title: {
-            type: String,
-            required: true
-        },
-        interviewer: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "user",
-            required: true
-        },
-        candidate: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "user"
-        },
-        roomId: {
-            type: String,
-            required: true,
-            unique: true
-        },
-        status: {
-            type: String,
-            enum: [
-                "scheduled",
-                "ongoing",
-                "completed",
-            ],
-            default:"scheduled"
-        },
-        scheduleAt:{
-            type:Date,
-        }
-    },{
-        timestamps:true
-    }
+const router= express.Router()
+
+
+/** 
+*
+*  @route POST /api/interview/create"
+*  @description 
+*
+*/
+
+router.post(
+    "/create",
+    authMiddleware,
+    interviewController.createInterview
 )
-
-module.exports = mongoose.model(
-  "Interview",
-  interviewSchema
-);

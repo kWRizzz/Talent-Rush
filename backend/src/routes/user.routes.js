@@ -19,7 +19,7 @@ router.post('/register',userController.userRegister)
  */
 
 
-router.post('/login',userController.userRegister)
+router.post('/login',userController.userLogin)
 
 
 /**

@@ -10,7 +10,7 @@ const tokenBlaklistingModel= mongoose.Schema({
     }
 },
 {
-    timestamp:true
+    timestamps:true
 }
 )
 
