@@ -31,4 +31,12 @@ router.post('/login',userController.userLogin)
 
 router.get('/logout' , userController.userLogout )
 
+
+/**
+ *  @route Get api/user/my
+ *  @description fetching the profile 
+ */
+
+router.get('/my', userController.getProfile)
+
 module.exports=router

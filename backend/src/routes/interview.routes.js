@@ -1,6 +1,7 @@
 const express = require('express')
 const interviewController = require("../controllers/interview.controller")
 const authMiddleware = require('../middleware/auth.middleware')
+const roleMiddleware = require('../middleware/role.middleware')
 
 const router = express.Router()
 
@@ -15,6 +16,10 @@ const router = express.Router()
 router.post(
     "/create",
     authMiddleware,
+    roleMiddleware(
+        "interviewer",
+        "admin"
+    ),
     interviewController.createInterview
 )
 
@@ -48,4 +53,4 @@ router.get(
 )
 
 
-module.exports=router
+module.exports = router
