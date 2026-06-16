@@ -58,35 +58,63 @@ const getMyInterviews = async (
 }
 
 
-const getInterviewById =async (
+const getInterviewById = async (
     req,
     res
 ) => {
     try {
 
-        const interview= await interviewModel.findById(
+        const interview = await interviewModel.findById(
             req.user.userId
         )
 
-            if(!interview){
+        if (!interview) {
 
-      return res.status(404).json({
-        message:"Interview Not Found"
-      });
+            return res.status(404).json({
+                message: "Interview Not Found"
+            });
 
-    }
+        }
 
-    return res.status(200).json(
-      interview
-    );
+        return res.status(200).json(
+            interview
+        );
 
 
 
     } catch (error) {
         return res.status(500).json({
-      message:error.message
-    });
+            message: error.message
+        });
 
+    }
+}
+
+const deleteInterviwe = async (
+    req,
+    res
+) => {
+    try {
+        const interview = await interviewModel.findById(
+            req.params.id
+        )
+
+        if (!interview) {
+            return res.status(404).json({
+                message: "Interview Not Found"
+            });
+        }
+
+        await interview.deleteOne();
+
+        return res.status(200).json({
+            message: "Interview Deleted"
+        });
+    } catch (error) {
+        console.log(`error in deletion  ${error}`);
+        return res.status(500).json({
+            message: error.message
+        });
     }
 }
 

@@ -4,6 +4,7 @@ const connectDB=require('./src/lib/db')
 const cors= require("cors")
 const cookiepareser=require('cookie-parser')
 const userRouter=require('./src/routes/user.routes')
+const interviewRouter=require('./src/routes/interview.routes')
 
 const path=require('path')
 
@@ -16,14 +17,14 @@ const app= express()
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(cors({
-    origin:process.env.CLIENT_URL,
+    origin:"*",
     credentials:true
 }))
 
 app.use(cookiepareser())
 
 app.use('/api/user',userRouter)
-
+app.use('/api/interview',interviewRouter)
 
 /**
 * @Route Test apis

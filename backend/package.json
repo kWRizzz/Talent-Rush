@@ -5,7 +5,7 @@
   "main": "server.js",
   "type": "commonjs",
   "scripts": {
-    "dev":"nodemon server.js",
+    "dev":"npx nodemon server.js",
     "start": "node server.js"
   },
   "keywords": [],
