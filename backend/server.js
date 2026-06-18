@@ -5,6 +5,9 @@ const cors= require("cors")
 const cookiepareser=require('cookie-parser')
 const userRouter=require('./src/routes/user.routes')
 const interviewRouter=require('./src/routes/interview.routes')
+const initializeScoket= require("./src/sockets/index")
+const http=require('http')
+
 
 const path=require('path')
 
@@ -13,6 +16,8 @@ connectDB()
 
 const _dirname=path.resolve()
 const app= express()
+
+const server= http.createServer(app)
 
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
@@ -56,7 +61,8 @@ app.get('/test2',(req,res)=>{
 //     })
 // }
 
+initializeScoket(server)
 
-app.listen(process.env.PORT,()=>{
-    console.log(`server Started`);
+server.listen(process.env.PORT,()=>{
+    console.log("server now started")
 })

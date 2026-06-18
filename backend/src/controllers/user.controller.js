@@ -8,7 +8,7 @@ const { response, request } = require("express")
 
 const userRegister = async (req, res) => {
     try {
-        const { name, email, password } = req.body
+        const { name, email, password, role } = req.body
 
         if (!name || !email || !password) return res.status(400).json({
             message: "ENter All Credentials"
@@ -29,10 +29,11 @@ const userRegister = async (req, res) => {
         const user = await userModel.create({
             name,
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            role
         })
 
-        const token = generateToken(user._id, email, user.role)
+        const token = await generateToken(user._id, email, user.role)
 
         res.cookie("token", token, {
             httpOnly: true,

@@ -53,4 +53,20 @@ router.get(
 )
 
 
+/** 
+*
+*  @route DELETE /api/interview/get by id"
+*  @description Delete the full rooom 
+*
+*/
+
+router.delete(
+    '/:id',
+    authMiddleware,
+    interviewController.deleteInterviwe
+)
+
+
+
+
 module.exports = router

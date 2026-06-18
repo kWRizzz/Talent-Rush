@@ -5,7 +5,7 @@
   "main": "server.js",
   "type": "commonjs",
   "scripts": {
-    "dev":"npx nodemon server.js",
+    "dev": "npx nodemon server.js",
     "start": "node server.js"
   },
   "keywords": [],
@@ -21,6 +21,7 @@
     "inngest": "^3.44.3",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.2.3",
-    "ngrok": "^5.0.0-beta.2"
+    "ngrok": "^5.0.0-beta.2",
+    "socket.io": "^4.8.3"
   }
 }

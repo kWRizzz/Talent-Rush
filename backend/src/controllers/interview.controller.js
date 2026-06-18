@@ -12,13 +12,20 @@ const createInterview = async (
         const {
             title,
             candidate,
-            sheduledAt
-        } = req.body;
+            scheduledAt
+        } = req.body || {};
 
-        const interview = await interviewModel({
+        if (!title) {
+            return res.status(400).json({
+                success: false,
+                message: "Title is required"
+            });
+        }
+
+        const interview = await createInterviewService({
             title,
             candidate,
-            sheduledAt,
+            scheduledAt,
             interviewer: req.user.userId
         });
 
@@ -47,6 +54,8 @@ const getMyInterviews = async (
         }).populate("candidate", "name email")
 
 
+
+
         return res.status(200).json(
             interviews
         );
@@ -65,7 +74,7 @@ const getInterviewById = async (
     try {
 
         const interview = await interviewModel.findById(
-            req.user.userId
+            req.params.id
         )
 
         if (!interview) {
@@ -74,6 +83,12 @@ const getInterviewById = async (
                 message: "Interview Not Found"
             });
 
+        }
+
+        if (interview.interviewer.toString() !== req.user.userId) {
+            return res.status(403).json({
+                message: "Forbidden"
+            });
         }
 
         return res.status(200).json(
@@ -121,5 +136,6 @@ const deleteInterviwe = async (
 module.exports = {
     createInterview,
     getMyInterviews,
-    getInterviewById
+    getInterviewById,
+    deleteInterviwe
 }
