@@ -32,7 +32,19 @@ const NavBar = () => {
                     to='/features/CreateInterview'
                     className='relative hover:text-white group transition-colors  '
                 >
-                    Features
+                    Create
+                    <span
+                        className=' absolute -bottom-1.5 left-0  h-[1px] bg-neon-gradient rounded-full w-0 transition-all duration-300 group-hover:w-full'
+                    ></span>
+                </Link>
+                
+                {/* lik1.2 */}
+
+                <Link
+                    to='/features/MyInterviews'
+                    className='relative hover:text-white group transition-colors  '
+                >
+                    Your Interview
                     <span
                         className=' absolute -bottom-1.5 left-0  h-[1px] bg-neon-gradient rounded-full w-0 transition-all duration-300 group-hover:w-full'
                     ></span>
