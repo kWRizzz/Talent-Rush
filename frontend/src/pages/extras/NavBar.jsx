@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const NavBar = () => {
     return (
@@ -6,7 +7,8 @@ const NavBar = () => {
             className='w-full flex items-center justify-between px-6 py-5 md:px-12 bg-transparent text-white font-body'
         >
             {/* name */}
-            <div
+            <Link
+                to='/'
                 className='text-xl tracking-wide cursor-pointer'
             >
                 <span
@@ -15,7 +17,7 @@ const NavBar = () => {
                     Talent-Rush
                 </span>
 
-            </div>
+            </Link>
 
 
             {/* links */}
@@ -26,15 +28,15 @@ const NavBar = () => {
 
                 {/* lik1 */}
 
-                <a
-                    href='#features'
+                <Link
+                    to='/features/CreateInterview'
                     className='relative hover:text-white group transition-colors  '
                 >
                     Features
                     <span
                         className=' absolute -bottom-1.5 left-0  h-[1px] bg-neon-gradient rounded-full w-0 transition-all duration-300 group-hover:w-full'
                     ></span>
-                </a>
+                </Link>
 
 
                 {/* lik2 */}
@@ -68,18 +70,20 @@ const NavBar = () => {
                 className=' flex items-center space-x-5 text-sm font-medium'
             >
                 {/* login */}
-                <button
-                    className=' bg-neon-gradient  hover:opacity-90 px-6 py-2.5 rounded-full text-gray-300 hover:text-white transition-all  shadow-[0_0_24px_rgba(46,91,255,0.25)]'
+                <Link
+                    to='/login'
+                    className=' bg-neon-gradient  hover:opacity-90 px-6 py-2.5 rounded-full text-gray-300 hover:text-white transition-all  shadow-[0_0_24px_rgba(46,91,255,0.25)] flex items-center justify-center'
                 >
                     LogIn
-                </button>
+                </Link>
 
                 {/* signin */}
-                <button
-                    className= 'bg-neon-gradient hover:opacity-90 px-6 py-2.5 rounded-full  text-gray-300 hover:text-white transition-all shadow-[0_0_24px_rgba(46,91,255,0.25)]'
+                <Link
+                    to='/signin'
+                    className= 'bg-neon-gradient hover:opacity-90 px-6 py-2.5 rounded-full  text-gray-300 hover:text-white transition-all shadow-[0_0_24px_rgba(46,91,255,0.25)] flex items-center justify-center'
                 >
                     SignIn
-                </button>
+                </Link>
             </div>
         </nav>
     )
