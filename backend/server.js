@@ -6,7 +6,9 @@ const cookiepareser=require('cookie-parser')
 const userRouter=require('./src/routes/user.routes')
 const interviewRouter=require('./src/routes/interview.routes')
 const initializeScoket= require("./src/sockets/index")
+const questionRoute= require('./src/routes/question.routes')
 const http=require('http')
+
 
 
 const path=require('path')
@@ -30,6 +32,7 @@ app.use(cookiepareser())
 
 app.use('/api/user',userRouter)
 app.use('/api/interview',interviewRouter)
+app.use('/api/question',questionRoute)
 
 /**
 * @Route Test apis
