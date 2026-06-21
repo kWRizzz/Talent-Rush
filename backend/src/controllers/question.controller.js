@@ -89,6 +89,16 @@ const getQuestionsById= async (
             req.param.id
         )
 
+        if(!question){
+
+         return res.status(404)
+         .json({
+            message:
+            "Question Not Found"
+         });
+
+      }
+
         res.status(200).json({
             message:"here is your questions",
             question,
