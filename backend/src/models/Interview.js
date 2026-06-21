@@ -15,6 +15,12 @@ const interviewSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "user"
         },
+        questions:[
+            {
+                type:mongoose.Schema.Types.ObjectId,
+                ref:"Question"
+            }
+        ],
         participates:{
             type:mongoose.Schema.Types.ObjectId,
             ref:"user"
