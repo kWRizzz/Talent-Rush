@@ -21,4 +21,28 @@ router.post("/create",
 )   
 
 
+/**
+ *  @ROUTE GET api/question/
+ *  @description get the all questions
+ */
+
+router.get(
+    '/',
+    authMiddleware,
+    questionController.getQuestions
+)
+
+
+/**
+ *  @ROUTE GET api/question/:id
+ *  @description get the all questions by the user id
+ */
+
+
+router.get(
+    '/:id',
+    authMiddleware,
+    questionController.getQuestionsById
+)
+
 module.exports= router

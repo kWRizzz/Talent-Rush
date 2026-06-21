@@ -1,7 +1,7 @@
 const questionModel= require("../models/Question")
 
 
-module.exports= createQuestionService = async (
+const createQuestionService = async (
     questionData
 ) => {
     const question = await questionModel.create(
@@ -10,4 +10,17 @@ module.exports= createQuestionService = async (
     
     console.log(question);
     return question
+}
+
+const getAllquestionsServices= async (
+) => {
+    return await questionModel.find().populate(
+        "createdBy",
+        "name email"
+    )
+}
+
+module.exports= {
+    createQuestionService,
+    getAllquestionsServices
 }
