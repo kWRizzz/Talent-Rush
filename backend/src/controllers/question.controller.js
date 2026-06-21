@@ -54,9 +54,9 @@ const getQuestions = async (
     res
 ) => {
     try {
-        if(!req.param.id) return res.status(400).json({
-            message:"no user found "
-        })
+        // if(!req.param.id) return res.status(400).json({
+        //     message:"no user found "
+        // })
 
         const questions = await getAllquestionsServices();
 

@@ -66,7 +66,22 @@ router.delete(
     interviewController.deleteInterviwe
 )
 
+/** 
+*
+*  @route POST /api/interview/:id/add-questions"
+*  @description add All the questions  
+*
+*/
 
+router.post(
+    '/:id/add-questions',
+    authMiddleware,
+    roleMiddleware(
+        "interviewer",
+        "admin"
+    ),
+    interviewController.addQuestion
+)
 
 
 module.exports = router

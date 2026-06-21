@@ -1,6 +1,7 @@
 const interviewModel = require("../models/Interview")
 const {
-    createInterviewService
+    createInterviewService,
+    addQuestionToInterview
 } = require("../services/interview.service")
 
 
@@ -133,9 +134,42 @@ const deleteInterviwe = async (
     }
 }
 
+const addQuestion = async (
+    req,
+    res
+) => {
+    try {
+        const { questionId } = req.body
+
+        if (!questionId) {
+            return res.status(400).json({
+                message: "no ques id"
+            })
+        }
+
+        const interview = await addQuestionToInterview(
+            req.params.id,
+            questionId
+        )
+
+        return res.status(200)
+            .json({
+                success: true,
+                interview
+            });
+    } catch (error) {
+        console.log(`error in adding the question to interview ${error}`);
+        res.status(404).json({
+            message: error.message
+        })
+    }
+}
+
+
 module.exports = {
     createInterview,
     getMyInterviews,
     getInterviewById,
-    deleteInterviwe
+    deleteInterviwe,
+    addQuestion
 }
