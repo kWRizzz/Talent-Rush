@@ -88,7 +88,7 @@ const getInterviewById = async (
 
         if (interview.interviewer.toString() !== req.user.userId) {
             return res.status(403).json({
-                message: "Forbidden"
+                message: "Forbidden message"
             });
         }
 
