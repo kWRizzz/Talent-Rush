@@ -177,7 +177,7 @@ const joinInterview = async (
     res
 ) => {
     try {
-        const interview = await interviewModel.findById(
+        const interview = await interviewModel.findOne(
             {
                 roomId: req.params.roomId
             }
@@ -205,7 +205,17 @@ const updateInterviewStatus = async (
     res
 ) => {
     try {
-        
+        const interview = await interviewModel.findById(
+            req.params.id
+        );
+
+        interview.status = req.body.status;
+
+        await interview.save();
+
+        return res.status(200)
+            .json(interview);
+
     } catch (error) {
         return res.status(500).json({
             message: error.message
@@ -219,5 +229,6 @@ module.exports = {
     getInterviewById,
     deleteInterviwe,
     addQuestion,
-    joinInterview
+    joinInterview,
+    updateInterviewStatus
 }
