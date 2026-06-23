@@ -76,8 +76,14 @@ const getInterviewById = async (
 
         const interview = await interviewModel.findById(
             req.params.id
+        ).populate(
+            "candidate",
+            "name email"
+        ).populate(
+            "questions"
         )
 
+        
         if (!interview) {
 
             return res.status(404).json({

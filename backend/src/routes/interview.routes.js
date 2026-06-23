@@ -74,7 +74,7 @@ router.delete(
 */
 
 router.post(
-    '/:id/add-questions',
+    '/:id/add-question',
     authMiddleware,
     roleMiddleware(
         "interviewer",
