@@ -83,7 +83,7 @@ const getInterviewById = async (
             "questions"
         )
 
-        
+
         if (!interview) {
 
             return res.status(404).json({
@@ -172,10 +172,52 @@ const addQuestion = async (
 }
 
 
+const joinInterview = async (
+    req,
+    res
+) => {
+    try {
+        const interview = await interviewModel.findById(
+            {
+                roomId: req.params.roomId
+            }
+        );
+
+        if (!interview) return res.status(400).json({
+            message: "no interview found ",
+            success: false
+        })
+
+        return res.status(200).json({
+            success: true,
+            interview
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        });
+
+    }
+}
+
+const updateInterviewStatus = async (
+    req,
+    res
+) => {
+    try {
+        
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        });
+    }
+}
+
 module.exports = {
     createInterview,
     getMyInterviews,
     getInterviewById,
     deleteInterviwe,
-    addQuestion
+    addQuestion,
+    joinInterview
 }

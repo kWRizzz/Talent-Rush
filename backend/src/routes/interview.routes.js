@@ -84,4 +84,19 @@ router.post(
 )
 
 
+
+/** 
+*
+*  @route POST /api/interview/:roomId by id"
+*  @description join the room for interview 
+*
+*/
+
+
+router.post(
+    '/:roomid',
+    authMiddleware,
+    interviewController.joinInterview
+)
+
 module.exports = router
