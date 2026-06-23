@@ -11,6 +11,22 @@ const createSubmissionService = async (
     return submission
 }
 
+const getSubmissionsByInterview =async (
+    interviewId
+) => {
+        return await submissionModel.find({
+            interview:interviewId
+        }).populate(
+            "candidate",
+            "name email"
+        ).populate(
+            "question",
+            "title difficulty"
+        )
+
+}
+
 module.exports={
-    createSubmissionService
+    createSubmissionService,
+    getSubmissionsByInterview
 }

@@ -7,7 +7,8 @@ express.Router();
 const authMiddleware = require('../middleware/auth.middleware')
 const roleMiddleware = require('../middleware/role.middleware')
 
-const submissionController= require("../controllers/submission.controller")
+const submissionController= require("../controllers/submission.controller");
+
 
 
 
@@ -23,5 +24,18 @@ router.post("/create",
     submissionController.createSubmission
 )
 
+
+/** 
+*
+*  @route GET /api/submission/interview/:interviewId"
+*  @description get your submissions from the interview end
+*
+*/
+
+router.get(
+    '/interview/:interviewId',
+    authMiddleware,
+    submissionController.getInterviewSubmissions
+)
 
 module.exports= router
