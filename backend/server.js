@@ -8,6 +8,7 @@ const interviewRouter=require('./src/routes/interview.routes')
 const initializeScoket= require("./src/sockets/index")
 const questionRoute= require('./src/routes/question.routes')
 const submissionRouter= require('./src/routes/submission.routes')
+const compilerRoute= require('./src/routes/compiler.routes')
 const http=require('http')
 
 
@@ -35,6 +36,8 @@ app.use('/api/user',userRouter)
 app.use('/api/interview',interviewRouter)
 app.use('/api/question',questionRoute)
 app.use('/api/submission',submissionRouter)
+app.use('/api/compiler',compilerRoute)
+
 /**
 * @Route Test apis
 *
