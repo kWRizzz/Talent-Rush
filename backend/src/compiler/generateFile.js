@@ -6,7 +6,9 @@ const crypto= require("crypto")
 const dirPath=path.join(__dirname,"temp")
 
 if(!fs.existsSync(dirPath)){
-    fs.mkdirSync(dirPath)
+    fs.mkdirSync(dirPath,{
+        recursive:true
+    })
 }
 
 
@@ -27,7 +29,11 @@ const generateFile = async (
         code
     )
 
+    
     return filePath;
+
 }
 
-module.exports= generateFile
+module.exports= {
+    generateFile
+}
