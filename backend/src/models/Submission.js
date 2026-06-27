@@ -38,11 +38,30 @@ const submissionSchema = new mongoose.Schema({
     output: {
         type: String,
         default: ""
+    },
+    executionTime: {
+        type: String,
+        default: ""
+    },
+
+    memory: {
+        type: String,
+        default: ""
+    },
+
+    passedTestCases: {
+        type: Number,
+        default: 0
+    },
+
+    totalTestCases: {
+        type: Number,
+        default: 0
     }
 },
-{
-    timestamps:true
-}
-)   
+    {
+        timestamps: true
+    }
+)
 
-module.exports=mongoose.model("Submission",submissionSchema)
+module.exports = mongoose.model("Submission", submissionSchema)
