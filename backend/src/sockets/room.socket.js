@@ -6,6 +6,11 @@ const {
 
  }= require('./constants')
 
+ const {
+    addUser,
+    removeUser,
+    getUsers
+} = require("./roomManager");
 
 const roomSocket= async (
     io,
