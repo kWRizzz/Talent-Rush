@@ -71,5 +71,5 @@ app.get('/test2',(req,res)=>{
 initializeScoket(server)
 
 server.listen(process.env.PORT,()=>{
-    console.log("server now vvvvstarted")
+    console.log("servdsdsdfer now vvvvstarted")
 })
