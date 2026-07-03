@@ -1,5 +1,5 @@
 const rooms = new Map();
-
+const userModel= require('../models/User')
 const addUser = (
     roomId,
     user
@@ -46,6 +46,24 @@ const getUsers = (
     return rooms.get(roomId) || [];
 
 };
+
+const findRoomBySocket=(
+    socketId
+)=>{
+
+    for(const [roomId,user] of rooms.entries()){
+        const user= userModel.find(
+            (u)=>u.socketId=== socketId
+        )
+        if(user){
+            return roomId
+        }
+        
+    }
+    return false;
+}
+
+
 
 module.exports = {
 
