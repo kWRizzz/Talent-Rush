@@ -9,7 +9,9 @@ const {
  const {
     addUser,
     removeUser,
-    getUsers
+    getUsers,
+    findRoomBySocket,
+    deleteEmptyRoom
 } = require("./roomManager");
 
 const roomSocket= async (
@@ -48,7 +50,26 @@ const roomSocket= async (
     socket.on(
         "disconnect",
         ()=>{
-            console.log(`user dissconnected`);
+            const roomId= findRoomBySocket(socket.id);
+            if(!roomId){
+                return;
+            }
+
+            removeUser(
+                roomId,
+                socket.id
+            )
+
+            deleteEmptyRoom(roomId)
+
+            const participants= getUsers(roomId);
+
+            io.to(roomId).emit(
+                USER_LEFT,
+                participants
+            )
+
+            console.log(`${socket.id} dissconnected`);
         }
     )
 }

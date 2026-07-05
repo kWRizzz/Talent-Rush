@@ -63,6 +63,15 @@ const findRoomBySocket=(
     return false;
 }
 
+const deleteEmptyRoom=(
+    roomId
+)=>{
+    const user= rooms.get(roomId);
+
+    if( user && user.length==0){
+        rooms.delete(roomId)
+    }
+}
 
 
 module.exports = {
@@ -71,6 +80,10 @@ module.exports = {
 
     removeUser,
 
-    getUsers
+    getUsers,
+
+    findRoomBySocket,
+
+    deleteEmptyRoom
 
 };
