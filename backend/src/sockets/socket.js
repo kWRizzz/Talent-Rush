@@ -4,6 +4,7 @@ const {
 const roomSocket= require('./room.socket')
 const editorSocket= require('./editor.socket')
 const videoSocket= require('./video.socket')
+const chatSocket = require('./chat.socket')
 
 const initializeScoket= (server)=>{
     const io= new Server(server,{
@@ -18,6 +19,7 @@ const initializeScoket= (server)=>{
         roomSocket(io,socket);
         editorSocket(io,socket);
         videoSocket(io,socket);
+        chatSocket(io,socket);
     })
 }
 
