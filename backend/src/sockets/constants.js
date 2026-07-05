@@ -18,5 +18,11 @@ module.exports={
 
     // chat
     SEND_MESSAGE:"send-message",
-    RECIEVE_MESSAGE:"recieve-message"
+    RECIEVE_MESSAGE:"recieve-message",
+
+    // vidio
+    OFFER:"offer",
+    ANSWER:"answer",
+    CAMERA_TOGGLE:"camera-toggle",
+    MIC_TOGGLE:"mic-toggle"
 }
