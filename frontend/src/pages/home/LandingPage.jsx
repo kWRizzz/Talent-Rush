@@ -55,14 +55,6 @@ const LandingPage = () => {
         {/* code editior */}
 
         <CodeEditorPrototype/>
-        
-
-
-
-
-
-
-        
       </main>
     </div>
   )
