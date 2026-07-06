@@ -1,78 +1,105 @@
-import { createSlice ,createAsyncThunk } from "@reduxjs/toolkit";
+import {
+    createSlice,
+    createAsyncThunk
+} from "@reduxjs/toolkit";
 
-export const loginUser= createAsyncThunk(
+import{
+    register,
+    login,
+    logout
+}from "../../services/auth.service"
+
+export const loginUser = createAsyncThunk(
     "auth/loginUser",
-    async (userData) => {
-        const result= await fetch("",{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
-            },
-            body:JSON.stringify(userData)
-        })
-        const data= result.json()
-        console.log(data)
-        return data
+    async (userData,thunkAPI) => {
+        try {
+            return await register(
+                userData
+            )
+        } catch (error) {
+            return thunkAPI.rejectWithValue(
+                error.message
+            )
+        }
     }
 )
 
-export const registerUser= createAsyncThunk(
+export const registerUser = createAsyncThunk(
     "auth/registerUser",
-    async (userData) => {
-        const result= await fetch("http://localhost:3000/api/user/register",{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
-            },
-            body:JSON.stringify(userData)
-        })
-        
-        const data= result.json()
-        console.log(data)
-        return data
+    async (userData,thunkAPI) => {
+        try {
+            return await login(
+                userData
+            )
+        } catch (error) {
+            return thunkAPI.rejectWithValue(
+                error.message
+            )
+        }
     }
 )
 
-const authReducer= createSlice({
-    name:"auth",
+export const logoutUser= createAsyncThunk(
+    "auth/logout",
+    async (userData,thunkAPI) => {
+        try {
+            return await logout()
+        } catch (error) {
+            return thunkAPI.rejectWithValue(
+                error.message
+            )
+        }
+    }
+)
 
-    initialState:{
-        user:null,
-        token:null,
-        isLoading:false
+const authReducer = createSlice({
+    name: "auth",
+
+    initialState: {
+        user: null,
+        token: null,
+        isLoading: false,
+        error:null
     },
 
-    reducers:{},
+    reducers: {},
 
-    extraReducers:(builder)=>{
+    extraReducers: (builder) => {
 
-        builder.addCase(loginUser.pending, (state)=>{
-            state.isLoading+=true
+        builder.addCase(loginUser.pending, (state) => {
+            state.isLoading += true
         })
 
-        builder.addCase(loginUser.fulfilled, (state,action)=>{
-            state.isLoading +=false
-            state.user+= action.payload.user
-            state.token+= action.payload.token
-        })
-
-        builder.addCase(loginUser.rejected, (state)=>{
-            state.isLoading+= false
-        })
-
-        builder.addCase(registerUser.pending, (state)=>{
-            state.isLoading+=true
-        })
-
-        builder.addCase(registerUser.fulfilled , (state,action)=>{
-            state.isLoading+=false
+        builder.addCase(loginUser.fulfilled, (state, action) => {
+            state.isLoading += false
             state.user += action.payload.user
             state.token += action.payload.token
         })
 
-        builder.addCase(registerUser.rejected, (state)=>{
+        builder.addCase(loginUser.rejected, (state) => {
             state.isLoading += false
         })
+
+        builder.addCase(registerUser.pending, (state) => {
+            state.isLoading += true
+        })
+
+        builder.addCase(registerUser.fulfilled, (state, action) => {
+            state.isLoading += false
+            state.user += action.payload.user
+            state.token += action.payload.token
+        })
+
+        builder.addCase(registerUser.rejected, (state) => {
+            state.isLoading += false
+        })
+
+        builder.addCase(logoutUser.fulfilled,
+            (state)=>{
+                state.user=null;
+                state.token=null;
+            }
+        )
     }
 })
 
