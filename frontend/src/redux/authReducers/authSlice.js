@@ -13,7 +13,7 @@ export const loginUser = createAsyncThunk(
     "auth/loginUser",
     async (userData,thunkAPI) => {
         try {
-            return await register(
+            return await login(
                 userData
             )
         } catch (error) {
@@ -28,7 +28,7 @@ export const registerUser = createAsyncThunk(
     "auth/registerUser",
     async (userData,thunkAPI) => {
         try {
-            return await login(
+            return await register(
                 userData
             )
         } catch (error) {
@@ -67,31 +67,31 @@ const authReducer = createSlice({
     extraReducers: (builder) => {
 
         builder.addCase(loginUser.pending, (state) => {
-            state.isLoading += true
+            state.isLoading = true
         })
 
         builder.addCase(loginUser.fulfilled, (state, action) => {
-            state.isLoading += false
-            state.user += action.payload.user
-            state.token += action.payload.token
+            state.isLoading = false
+            state.user = action.payload.user
+            state.token = action.payload.token
         })
 
         builder.addCase(loginUser.rejected, (state) => {
-            state.isLoading += false
+            state.isLoading = false
         })
 
         builder.addCase(registerUser.pending, (state) => {
-            state.isLoading += true
+            state.isLoading = true
         })
 
         builder.addCase(registerUser.fulfilled, (state, action) => {
-            state.isLoading += false
-            state.user += action.payload.user
-            state.token += action.payload.token
+            state.isLoading = false
+            state.user = action.payload.user
+            state.token = action.payload.token
         })
 
         builder.addCase(registerUser.rejected, (state) => {
-            state.isLoading += false
+            state.isLoading = false
         })
 
         builder.addCase(logoutUser.fulfilled,
