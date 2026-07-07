@@ -11,43 +11,52 @@ import Dashboard from '../pages/dashboard/Dashboard'
 import CreateInterview from '../pages/dashboard/CreateInterview'
 import MyInterviews from '../pages/dashboard/MyInterviews'
 import InterviewRoom from '../pages/interview/InterviewRoom'
+import ProtectedRoute from './ProtectedRoute'
 
 
 const AppRoutes = () => {
-  return (
-    <BrowserRouter>
-        <Routes>
-            <Route
-                path='/'
-                element={<LandingPage/>}
-            />
-            <Route
-                path='/login'
-                element={<Login/>}
-            />
-            <Route
-                path='/signin'
-                element={<SignIn/>}
-            />
-            <Route
-                path='/dashboard'
-                element={<Dashboard/>}
-            />
-            <Route
-                path='/create-interview'
-                element={<CreateInterview/>}
-            />
-            <Route
-                path='/my-interviews'
-                element={<MyInterviews/>}
-            />
-            <Route
-                path='/interview/:roomId'
-                element={<InterviewRoom/>}
-            />
-        </Routes>
-    </BrowserRouter>
-  )
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route
+                    path='/'
+                    element={<LandingPage />}
+                />
+                <Route
+                    path='/login'
+                    element={<Login />}
+                />
+                <Route
+                    path='/signin'
+                    element={<SignIn />}
+                />
+                <ProtectedRoute>
+                    <Route
+                        path='/dashboard'
+                        element={<Dashboard />}
+                    />
+                </ProtectedRoute>
+                <ProtectedRoute>
+                    <Route
+                        path='/create-interview'
+                        element={<CreateInterview />}
+                    />
+                </ProtectedRoute>
+                <ProtectedRoute>
+                    <Route
+                        path='/my-interviews'
+                        element={<MyInterviews />}
+                    />
+                </ProtectedRoute>
+                <ProtectedRoute>
+                    <Route
+                        path='/interview/:roomId'
+                        element={<InterviewRoom />}
+                    />
+                </ProtectedRoute>
+            </Routes>
+        </BrowserRouter>
+    )
 }
 
 export default AppRoutes
