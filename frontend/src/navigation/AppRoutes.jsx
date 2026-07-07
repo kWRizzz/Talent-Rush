@@ -30,30 +30,38 @@ const AppRoutes = () => {
                     path='/signin'
                     element={<SignIn />}
                 />
-                <ProtectedRoute>
-                    <Route
-                        path='/dashboard'
-                        element={<Dashboard />}
-                    />
-                </ProtectedRoute>
-                <ProtectedRoute>
-                    <Route
-                        path='/create-interview'
-                        element={<CreateInterview />}
-                    />
-                </ProtectedRoute>
-                <ProtectedRoute>
-                    <Route
-                        path='/my-interviews'
-                        element={<MyInterviews />}
-                    />
-                </ProtectedRoute>
-                <ProtectedRoute>
-                    <Route
-                        path='/interview/:roomId'
-                        element={<InterviewRoom />}
-                    />
-                </ProtectedRoute>
+                <Route
+                    path='/dashboard'
+                    element={
+                        <ProtectedRoute>
+                            <Dashboard />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path='/create-interview'
+                    element={
+                        <ProtectedRoute>
+                            <CreateInterview />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path='/my-interviews'
+                    element={
+                        <ProtectedRoute>
+                            <MyInterviews />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path='/interview/:roomId'
+                    element={
+                        <ProtectedRoute>
+                            <InterviewRoom />
+                        </ProtectedRoute>
+                    }
+                />
             </Routes>
         </BrowserRouter>
     )

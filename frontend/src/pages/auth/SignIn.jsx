@@ -1,11 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { registerUser } from "../../redux/authReducers/authSlice.js";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 
 const SignIn = () => {
 
   const dispatch=useDispatch()
+  const navigate = useNavigate()
+  const { user } = useSelector((state) => state.auth)
+
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard')
+    }
+  }, [user, navigate])
 
   const [formData, setFormData] = useState({
     name: "",

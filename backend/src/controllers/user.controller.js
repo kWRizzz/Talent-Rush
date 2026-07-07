@@ -128,11 +128,11 @@ const userLogout = async (req, res) => {
 }
 
 
-const getProfile = async (request, res) => {
+const getProfile = async (req, res) => {
 
     try {
         const user = await userModel.findById(
-            request.user.userId
+            req.user.userId
         ).select("-password")
 
         if (!user) return res.status(400).json({

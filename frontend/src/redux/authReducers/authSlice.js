@@ -6,7 +6,8 @@ import {
 import{
     register,
     login,
-    logout
+    logout,
+    getUser
 }from "../../services/auth.service"
 
 export const loginUser = createAsyncThunk(
@@ -44,6 +45,19 @@ export const logoutUser= createAsyncThunk(
     async (userData,thunkAPI) => {
         try {
             return await logout()
+        } catch (error) {
+            return thunkAPI.rejectWithValue(
+                error.message
+            )
+        }
+    }
+)
+
+export const loadUser=createAsyncThunk(
+    "auth/loadUser",
+    async (_,thunkAPI) => {
+        try {
+            return getUser()
         } catch (error) {
             return thunkAPI.rejectWithValue(
                 error.message
@@ -100,6 +114,10 @@ const authReducer = createSlice({
                 state.token=null;
             }
         )
+
+        builder.addCase(loadUser.fulfilled,(state,action)=>{
+            state.user=action.payload.user
+        })
     }
 })
 

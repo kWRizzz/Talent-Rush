@@ -40,3 +40,11 @@ export const logout= async () => {
     return data
 }
 
+export const getUser= async () => {
+    const response = await fetch(`${API}/my`,{
+        method:"GET",
+        credentials:"include"
+    })
+    const data = await response.json()
+    return data
+}

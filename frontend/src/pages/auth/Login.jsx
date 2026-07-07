@@ -1,13 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  useDispatch
+  useDispatch,
+  useSelector
 } from "react-redux"
 import {
   loginUser
 } from "../../redux/authReducers/authSlice"
+import { useNavigate } from "react-router-dom";
+
 const Login = () => {
 
   const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const { user } = useSelector((state) => state.auth)
+
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard')
+    }
+  }, [user, navigate])
 
   const [formData, setFormData] = useState({
     email: "",
