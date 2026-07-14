@@ -28,5 +28,62 @@ export const fetchMyInterviews= createAsyncThunk(
 
 export const createNewInterview =createAsyncThunk(
     "interview/createNewInterview",
-    
+    async (
+        data,
+        thunkAPI
+    ) => {
+        try {
+            return await createInterview(data)
+        } catch (error) {
+            return thunkAPI.rejectWithValue(
+                error.message
+            )
+        }
+    }
 )
+
+export const removeInterview =createAsyncThunk(
+    "interview/removeInterview",
+    async (
+        data,
+        thunkAPI
+    ) => {
+        try {
+            await deleteInterview(id);
+            return id
+        } catch (error) {
+            return thunkAPI.rejectWithValue(
+                error.message
+            )
+        }
+    }
+)
+
+
+const interviewSlice = createSlice({
+    name:"interview",
+    initialState:{
+        interview:[],
+        isLoading:false,
+        error:null
+    },
+    reducers:{},
+    extraReducers: (builder)=>{
+        builder.addCase(fetchMyInterviews.pending,(state)=>{
+            state.isLoading=true
+        })
+
+        builder.addCase(fetchMyInterviews.fulfilled,(state,action)=>{
+            state.isLoading=false,
+            state.interview= action.payload
+        })
+
+        builder.addCase(fetchMyInterviews.rejected,(state,action)=>{
+            state.isLoading=false,
+            state.error=action.payload
+        })
+    }
+})
+
+
+export default interviewSlice.reducer
