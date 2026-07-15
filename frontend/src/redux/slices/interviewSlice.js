@@ -63,7 +63,7 @@ export const removeInterview =createAsyncThunk(
 const interviewSlice = createSlice({
     name:"interview",
     initialState:{
-        interview:[],
+        interviews:[],
         isLoading:false,
         error:null
     },
@@ -75,7 +75,7 @@ const interviewSlice = createSlice({
 
         builder.addCase(fetchMyInterviews.fulfilled,(state,action)=>{
             state.isLoading=false,
-            state.interview= action.payload
+            state.interviews= action.payload
         })
 
         builder.addCase(fetchMyInterviews.rejected,(state,action)=>{
