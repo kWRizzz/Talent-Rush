@@ -40,12 +40,12 @@ const Dashboard = () => {
                 <div
                     className=' grid gap-2'
                 >
-                    {interviews.map((interview)=>{
+                    {interviews.map((interview) => (
                         <InterviewCard
                             key={interview._id}
                             interview={interview}
                         />
-                    })}
+                    ))}
                 </div>
             }
         </MainLayout>

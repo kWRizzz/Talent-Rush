@@ -6,6 +6,6 @@ import interviewReducer from "../redux/slices/interviewSlice.js"
 export const store = configureStore({
   reducer: {
     auth:authReducer,
-    interviewReducer
+    interview: interviewReducer
   },
 })

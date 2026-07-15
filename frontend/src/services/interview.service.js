@@ -43,7 +43,7 @@ export const getInterviewById = async (
 ) => {
     try {
         const respons= await fetch(
-            `http://localhost:3000/api/interview/:${id}`,
+            `http://localhost:3000/api/interview/${id}`,
             {
                 credentials:"include"
             }
@@ -63,7 +63,7 @@ export const deleteInterview = async (
 ) => {
     try {
         const respons= await fetch(
-            `http://localhost:3000/api/interview/:${id}`,
+            `http://localhost:3000/api/interview/${id}`,
             {
                 method:"DELETE",
                 credentials:"include"
