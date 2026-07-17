@@ -2,10 +2,8 @@ import React from 'react'
 
 const CreateInterview = () => {
   return (
-    <div>CreateIssnterview herer</div>
+    <div>CreateasassasaIntervi vew</div>
   )
 }
-
-
 
 export default CreateInterview

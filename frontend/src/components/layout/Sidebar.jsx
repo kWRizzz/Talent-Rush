@@ -2,7 +2,6 @@ import React from 'react'
 import{
   Link
 }from "react-router-dom"
-
 const Sidebar = () => {
   return (
     <div
@@ -18,7 +17,7 @@ const Sidebar = () => {
         </Link>
 
         <Link
-          to={"create-interview"}
+          to={`/interview`}
         >
           Create Interview
         </Link>

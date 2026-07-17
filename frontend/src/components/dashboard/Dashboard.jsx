@@ -10,6 +10,7 @@ import {
 } from "../../redux/slices/interviewSlice"
 import MainLayout from '../layout/MainLayout'
 import InterviewCard from './InterviewCard'
+import InterviewList from './InterviewList'
 
 
 const Dashboard = () => {
@@ -40,12 +41,9 @@ const Dashboard = () => {
                 <div
                     className=' grid gap-2'
                 >
-                    {interviews.map((interview) => (
-                        <InterviewCard
-                            key={interview._id}
-                            interview={interview}
-                        />
-                    ))}
+                    <InterviewList
+                        interviews={interviews}
+                    />
                 </div>
             }
         </MainLayout>
