@@ -2,7 +2,7 @@ import React from 'react'
 
 const QuestionPanel = () => {
   return (
-    <div>QuestionPanel</div>
+    <div>Question  Panel</div>
   )
 }
 
