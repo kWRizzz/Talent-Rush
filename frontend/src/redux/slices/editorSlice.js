@@ -3,7 +3,7 @@ import {
 } from "@reduxjs/toolkit"
 
 const initialState = {
-    language="javascript",
+    language:"javascript",
     code: "",
     output: "",
     isRunning: false

@@ -1,8 +1,11 @@
 import React from 'react'
+import EditorPanel from '../../components/interviews/EditorPanel'
 
 const InterviewRoom = () => {
   return (
-    <div>InterviewRoom</div>
+    <div>
+      <EditorPanel/>
+    </div>
   )
 }
 
