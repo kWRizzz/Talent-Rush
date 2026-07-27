@@ -25,7 +25,11 @@ const EditorPanel = () => {
       className=' h-full'
     >
       <h1>
-        heditor
+
+        
+        heditor    
+
+
       </h1>
       <div
         className=' h-[40rem] w-[50rem] '
