@@ -11,7 +11,9 @@ const OutputPanel = () => {
   )
   
   return (
-    <div>
+    <div
+      className='border rounded-lg p-4 h-48 overflow-auto'
+    >
       <h1>
            Your OutPut here
       </h1>

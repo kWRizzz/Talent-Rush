@@ -7,6 +7,7 @@ import {
   setCode
 } from "../../redux/slices/editorSlice"
 import Editor from "@monaco-editor/react"
+import RunTime from './RunTime'
 
 
 const EditorPanel = () => {
@@ -26,8 +27,8 @@ const EditorPanel = () => {
     >
       <h1>
 
-        
-        heditor    
+
+        heditor
 
 
       </h1>
@@ -35,6 +36,11 @@ const EditorPanel = () => {
         className=' h-[40rem] w-[50rem] '
         onKeyDown={(e) => e.stopPropagation()}
       >
+        <div className="flex justify-end">
+
+          <RunTime />
+
+        </div>
         <Editor
           height="50%"
           theme='vs-dark'
@@ -43,6 +49,8 @@ const EditorPanel = () => {
           onChange={handleChange}
         />
       </div>
+
+
     </div>
   )
 }
