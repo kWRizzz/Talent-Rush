@@ -30,7 +30,7 @@ const RunTime = () => {
         >
             {
                 isRunning ? 
-                    "Running...":
+                    "Running... ":
                     "▶ Run Code"
             }
         </button>

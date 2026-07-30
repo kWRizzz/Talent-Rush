@@ -25,7 +25,9 @@ const EditorPanel = () => {
     <div
       className=' h-full'
     >
-      <h1>
+      <h1
+        className=' text-5xl'
+      >
 
 
         heditor
