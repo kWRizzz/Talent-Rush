@@ -95,7 +95,7 @@ const userLogin = async (req, res) => {
         })
 
     } catch (error) {
-        console.log(`Some Error Has Occured While Loggin You In  ${error}`);
+        console.log(`Some Error Has    Occured While Loggin You In  ${error}`);
         res.status(400).json({
             message: `error in login ${error}`
         })
