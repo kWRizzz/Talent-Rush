@@ -4,6 +4,7 @@ import{
     useSelector
 }from "react-redux"
 import { selectedQuestion } from '../../redux/slices/questionSlice'
+import { setCode } from '../../redux/slices/editorSlice'
 
 
 const QuestionCard = ({ question, index }) => {
@@ -18,6 +19,9 @@ const QuestionCard = ({ question, index }) => {
     const handleSelect= () => {
         dispatch(
             selectedQuestion(question)
+        )
+        dispatch(
+            setCode(question.starterCode || "")
         )
     }
 
