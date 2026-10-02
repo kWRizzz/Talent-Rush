@@ -1,9 +1,35 @@
 import React from 'react'
+import{
+    useDispatch,
+    useSelector
+}from "react-redux"
+import { selectedQuestion } from '../../redux/slices/questionSlice'
+
 
 const QuestionCard = ({ question, index }) => {
+    const dispatch= useDispatch();
+
+    const {selectedQuestion}= useSelector(
+        (state)=>state.question
+    )
+
+    const isSelected= selectedQuestion?._id===question.id
+
+    const handleSelect= () => {
+        dispatch(
+            selectedQuestion(question)
+        )
+    }
+
     return (
         <div
-            className="border p-3 rounded"
+            onClick={handleSelect}
+            className={`border p-3 rounded cursor-pointer ${
+                isSelected?
+                "border-blue-500"
+                :""
+            }`}
+
         >
             <p className="font-medium">
                 {index+1}.{question.title}
