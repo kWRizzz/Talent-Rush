@@ -39,6 +39,9 @@ const editorSlice = createSlice({
     name: "editor",
     initialState,
     reducers: {
+        setStarterCode:(state,action)=>{
+            state.code=action.payload || ""
+        },
         setLanguage: (state, action) => {
             state.language = action.payload
         },
@@ -84,6 +87,7 @@ export const {
     setOutput,
     setRunning,
     resetEditor,
+    setStarterCode
 } = editorSlice.actions;
 
 export default editorSlice.reducer;
