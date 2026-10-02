@@ -9,6 +9,7 @@ import {
 import Editor from "@monaco-editor/react"
 import RunTime from './RunTime'
 import RunButton from './RunButton'
+import LanguageSelector from './LanguageSelector'
 
 
 const EditorPanel = () => {
@@ -40,7 +41,7 @@ const EditorPanel = () => {
         onKeyDown={(e) => e.stopPropagation()}
       >
         <div className="flex justify-end">
-
+          <LanguageSelector/>
           <RunButton/>
 
         </div>
