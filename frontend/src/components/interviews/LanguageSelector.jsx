@@ -25,6 +25,7 @@ const LanguageSelector = () => {
         <select 
             value={language}
             onChange={handleLanguage}
+             className="border rounded px-3 py-2"
         >
             <option value="javascript">
                 JavaScript
