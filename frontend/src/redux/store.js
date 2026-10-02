@@ -4,11 +4,14 @@ import authReducer  from "../redux/authReducers/authSlice.js";
 import interviewReducer from "../redux/slices/interviewSlice.js"
 
 import editorReducer from "../redux/slices/editorSlice.js"
+
+import questionReducer from './slices/questionSlice.js';
 export const store = configureStore({
   reducer: {
     auth:authReducer,
     interview: interviewReducer,
-    editor: editorReducer
+    editor: editorReducer,
+    question: questionReducer
   },
 })
 
