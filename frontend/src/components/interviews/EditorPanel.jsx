@@ -8,6 +8,7 @@ import {
 } from "../../redux/slices/editorSlice"
 import Editor from "@monaco-editor/react"
 import RunTime from './RunTime'
+import RunButton from './RunButton'
 
 
 const EditorPanel = () => {
@@ -40,7 +41,7 @@ const EditorPanel = () => {
       >
         <div className="flex justify-end">
 
-          <RunTime />
+          <RunButton/>
 
         </div>
         <Editor
