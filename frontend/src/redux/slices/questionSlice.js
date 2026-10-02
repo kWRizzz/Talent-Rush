@@ -11,7 +11,7 @@ export const fetchInterviewQuestions = createAsyncThunk(
     async (interviewId, thunkAPI) => {
         try {
             const response = await getInterviewById(interviewId);
-            return response.question || [];
+            return response.questions || [];
         } catch (error) {
             return thunkAPI.rejectWithValue(
                 error.message

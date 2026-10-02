@@ -7,7 +7,7 @@ import QuestionCard from './QuestionCard'
 
 const QuestionPanel = () => {
   const {
-    questions,
+    question: questions,
     isLoading,
     error
   } = useSelector(
@@ -30,7 +30,7 @@ const QuestionPanel = () => {
     )
   }
 
-  if (!questions.length) {
+  if (!questions || !questions.length) {
     return (
       <div>
         no questions are added pls add a question

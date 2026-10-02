@@ -3,7 +3,7 @@ import {
     useDispatch,
     useSelector
 } from "react-redux"
-import { runCode } from '../../services/compiler.service';
+import { runCode } from '../../redux/slices/editorSlice';
 
 
 const RunButton = () => {
@@ -14,7 +14,7 @@ const RunButton = () => {
 
     const dispatch= useDispatch();
     const handleRun=()=>{
-        dispatch(runCode)
+        dispatch(runCode())
     }
 
   return (

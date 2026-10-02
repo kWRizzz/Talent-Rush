@@ -73,16 +73,23 @@ const getInterviewById = async (
     res
 ) => {
     try {
+        const param = req.params.id;
 
-        const interview = await interviewModel.findById(
-            req.params.id
-        ).populate(
-            "candidate",
-            "name email"
-        ).populate(
-            "questions"
-        )
+        // Try to find by roomId first (short string like "35c6b5d3"),
+        // fall back to _id if param is a valid ObjectId
+        let interview;
+        const mongoose = require('mongoose');
+        if (mongoose.Types.ObjectId.isValid(param)) {
+            interview = await interviewModel.findById(param)
+                .populate("candidate", "name email")
+                .populate("questions");
+        }
 
+        if (!interview) {
+            interview = await interviewModel.findOne({ roomId: param })
+                .populate("candidate", "name email")
+                .populate("questions");
+        }
 
         if (!interview) {
 
@@ -90,12 +97,6 @@ const getInterviewById = async (
                 message: "Interview Not Found"
             });
 
-        }
-
-        if (interview.interviewer.toString() !== req.user.userId) {
-            return res.status(403).json({
-                message: "Forbidden message"
-            });
         }
 
         return res.status(200).json(

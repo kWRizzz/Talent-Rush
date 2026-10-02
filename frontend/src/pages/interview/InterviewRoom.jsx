@@ -11,18 +11,18 @@ import {
 import { fetchInterviewQuestions } from '../../redux/slices/questionSlice'
 
 const InterviewRoom = () => {
-  const { id } = useParams()
+  const { roomId } = useParams()
   const dispatch = useDispatch();
 
 
   useEffect(() => {
 
-    if (id) {
+    if (roomId) {
       dispatch(
-        fetchInterviewQuestions(id)
+        fetchInterviewQuestions(roomId)
       )
     }
-  }, [id, dispatch])
+  }, [roomId, dispatch])
 
 
   return (
@@ -36,18 +36,16 @@ const InterviewRoom = () => {
         <div className="col-span-4">
           <QuestionPanel />
         </div>
-      </div>
 
-      <div className="col-span-8">
-        <div className="h-[500px]">
-          <EditorPanel />
+        <div className="col-span-8">
+          <div className="h-[500px]">
+            <EditorPanel />
+          </div>
         </div>
-      </div>
 
-      <div
-        className='mt-4'
-      >
-          <OutputPanel/>
+        <div className="col-span-12 mt-4">
+          <OutputPanel />
+        </div>
       </div>
     </div>
   )

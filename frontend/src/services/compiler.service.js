@@ -4,7 +4,7 @@ export const runCode = async (
     data
 ) => {
 
-    const response = await fetch(`${API}/run`, {
+    const response = await fetch(`${API}/execute`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

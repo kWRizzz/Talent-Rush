@@ -38,7 +38,6 @@ export const getMyInterviews = async () => {
 }
 
 export const getInterviewById = async (
-    interviewData,
     id
 ) => {
     try {
@@ -49,7 +48,7 @@ export const getInterviewById = async (
             }
         )
 
-        const data= respons.json()
+        const data= await respons.json()
         console.log(data);
         return data
     } catch (error) {
@@ -70,7 +69,7 @@ export const deleteInterview = async (
             }
         )
 
-        const data= respons.json()
+        const data= await respons.json()
         console.log(data);
         return data;
     } catch (error) {
