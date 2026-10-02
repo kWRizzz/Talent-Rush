@@ -2,6 +2,7 @@ import React from 'react'
 import {
   useSelector
 } from "react-redux"
+import QuestionCard from './QuestionCard'
 
 
 const QuestionPanel = () => {
@@ -54,22 +55,11 @@ const QuestionPanel = () => {
 
         {
           questions.map((question, index) => (
-            <div
+            <QuestionCard
               key={question._id}
-              className="border p-3 rounded"
-            >
-              <p
-                className='font-medium'
-              >
-                {index+1}.{question.title}
-              </p>
-
-              <p
-                className=' text-sm mt-2'
-              >
-                {question.title}
-              </p>
-            </div>
+              question={question}
+              index={index}
+            />
           ))
         }
 
