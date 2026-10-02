@@ -8,7 +8,7 @@ const execute= async (
 ) => {
     return new Promise((
         resolve,
-        error
+        reject
     )=>{
         exec(
             `node ${filePath}`,

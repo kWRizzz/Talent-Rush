@@ -24,7 +24,10 @@ const runCode= async (
         }
     } catch(error){
         console.log(error);
-        
+        return {
+            success: false,
+            output: error.message || error.toString() || "Execution failed"
+        }
     }
 }
 

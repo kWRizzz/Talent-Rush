@@ -27,10 +27,17 @@ export const runCode= createAsyncThunk(
                 code
             })
 
-            return response.output
+            // The backend returns {success, output} where output is
+            // itself {success, output} from compiler.service.
+            // Extract the actual string.
+            const result = response.output;
+            if (typeof result === 'object' && result !== null) {
+                return result.output || "";
+            }
+            return result || "";
 
         } catch (error) {
-            thunkAPI.rejectWithValue(error.message)
+            return thunkAPI.rejectWithValue(error.message)
         }
     }
 )
