@@ -23,6 +23,7 @@ export const fetchInterviewQuestions = createAsyncThunk(
 
 const initialState = {
     question: [],
+    selectedQuestion:null,
     isLoading: false,
     error: null
 }
@@ -33,6 +34,9 @@ const questionSlice = createSlice(
         name: "question",
         initialState,
         reducers: {
+            selectedQuestion:(state,action)=>{
+                state.selectedQuestion=action.payload
+            },
             clearQuestions: (state) => {
                 state.question = [];
                 state.error = null;
@@ -61,6 +65,7 @@ const questionSlice = createSlice(
 )
 
 export const {
+    selectedQuestion,
     clearQuestions
 }= questionSlice.actions;
 
