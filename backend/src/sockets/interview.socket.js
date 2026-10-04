@@ -21,5 +21,14 @@ module.exports=(io)=>{
             console.log( socket.id+ " User disconnected");
             
         })
+
+        socket.on("code-change",({interviewId, code})=>{
+            socket.to(interviewId).emit(
+                "code-updated",
+                {
+                    code
+                }
+            )
+        })
     })
 }
