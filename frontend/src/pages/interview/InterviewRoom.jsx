@@ -11,23 +11,35 @@ import {
 import { fetchInterviewQuestions } from '../../redux/slices/questionSlice'
 import {
   connectSocket,
-  disconnectSocket
+  disconnectSocket,
+  getSocket
 } from "../../services/socket.service"
 
 const InterviewRoom = () => {
   const { roomId } = useParams()
   const dispatch = useDispatch();
   useEffect(() => {
+    if(!roomId) return
+
+    const socket= getSocket()
 
     connectSocket();
+
+    socket.emit("join-interview",{
+      interviewId:roomId
+    })
 
     return () => {
 
       disconnectSocket();
 
+      socket.emit("join-interview",{
+        interviewId:roomId
+      })
+
     };
 
-  }, []);
+  }, [roomId]);
 
   useEffect(() => {
 
