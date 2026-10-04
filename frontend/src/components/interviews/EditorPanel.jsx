@@ -11,8 +11,12 @@ import RunTime from './RunTime'
 import RunButton from './RunButton'
 import LanguageSelector from './LanguageSelector'
 
+import {
+  getSocket
+} from "../../services/socket.service"
 
-const EditorPanel = () => {
+
+const EditorPanel = ({interviewId }) => {
 
   const { code, language } = useSelector(
     (state) => state.editor
@@ -20,7 +24,16 @@ const EditorPanel = () => {
   const dispatch = useDispatch();
 
   const handleChange = (value) => {
-    dispatch(setCode(value || ""))
+    const newCode= value || "";
+    dispatch(newCode);
+
+    const socket= getSocket();
+
+    socket.emit("code-change",{
+      interviewId:interviewId,
+      code:newCode
+    })
+    
   }
 
   return (
@@ -41,8 +54,8 @@ const EditorPanel = () => {
         onKeyDown={(e) => e.stopPropagation()}
       >
         <div className="flex justify-end">
-          <LanguageSelector/>
-          <RunButton/>
+          <LanguageSelector />
+          <RunButton />
 
         </div>
         <Editor

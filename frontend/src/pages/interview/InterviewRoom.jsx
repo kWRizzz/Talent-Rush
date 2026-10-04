@@ -65,7 +65,7 @@ const InterviewRoom = () => {
 
         <div className="col-span-8">
           <div className="h-[500px]">
-            <EditorPanel />
+            <EditorPanel interviewId={roomId} />
           </div>
         </div>
 
