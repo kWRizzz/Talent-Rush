@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   useDispatch,
   useSelector
@@ -35,6 +35,25 @@ const EditorPanel = ({interviewId }) => {
     })
     
   }
+
+  useEffect(() => {
+    const socket=getSocket()
+
+    const handleCodeUpdate =({code})=>{
+      dispatch(setCode(code))
+    }
+    
+    socket.on("code-update",{
+      handleCodeUpdate
+    })
+  
+    return () => {
+      socket.off("code-update",{
+        handleCodeUpdate
+      })
+    }
+  }, [dispatch])
+  
 
   return (
     <div
