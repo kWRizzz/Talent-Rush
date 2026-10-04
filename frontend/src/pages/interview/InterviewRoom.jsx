@@ -9,11 +9,25 @@ import {
   useParams
 } from "react-router-dom"
 import { fetchInterviewQuestions } from '../../redux/slices/questionSlice'
+import {
+  connectSocket,
+  disconnectSocket
+} from "../../services/socket.service"
 
 const InterviewRoom = () => {
   const { roomId } = useParams()
   const dispatch = useDispatch();
+  useEffect(() => {
 
+    connectSocket();
+
+    return () => {
+
+      disconnectSocket();
+
+    };
+
+  }, []);
 
   useEffect(() => {
 
