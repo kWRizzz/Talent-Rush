@@ -14,6 +14,7 @@ import {
   disconnectSocket,
   getSocket
 } from "../../services/socket.service"
+import VideoPanel from '../../components/interviews/VideoPanel'
 
 const InterviewRoom = () => {
   const { roomId } = useParams()
@@ -70,6 +71,7 @@ const InterviewRoom = () => {
         </div>
 
         <div className="col-span-12 mt-4">
+          <VideoPanel/>
           <OutputPanel />
         </div>
       </div>
