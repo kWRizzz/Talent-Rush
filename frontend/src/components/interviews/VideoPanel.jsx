@@ -1,11 +1,35 @@
 import React, { useEffect, useRef } from 'react'
 
 import {
-  getLocalStream,
-  addLocalTrack
-} from "../../services/webrtc.service"
+  useSelector
+} from "react-redux"
 
-const VideoPanel = () => {
+
+import {
+  getLocalStream,
+  addLocalTrack,
+  createoffer
+} from "../../services/webrtc.service"
+import { getSocket } from '../../services/socket.service'
+
+const VideoPanel = ({ interviewId }) => {
+
+  const handleOffer = async () => {
+    try {
+      const offer = await createoffer();
+      const socket = getSocket();
+
+      socket.emit("offer", {
+        interviewId,
+        offer
+      })
+    } catch (error) {
+      console.log(
+        "acnt start offer "
+        + error
+      )
+    }
+  }
 
   const videoRef = useRef(null);
 
@@ -36,6 +60,12 @@ const VideoPanel = () => {
         muted
         className="w-full"
       />
+      <button
+        onClick={handleOffer}
+        className="border px-3 py-2 rounded mt-2"
+      >
+        connect
+      </button>
     </div>
   )
 }
