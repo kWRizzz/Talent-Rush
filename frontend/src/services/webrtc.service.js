@@ -63,3 +63,11 @@ export const addLocalTrack=async () => {
     return peer;
 }
 
+export const createoffer=async () => {
+    const peer= await addLocalTrack();
+    const offer= await peer.createoffer()
+    await peer.setLocalDescription(offer);
+
+    return offer;
+}
+

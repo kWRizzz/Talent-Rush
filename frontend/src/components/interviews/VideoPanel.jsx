@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from 'react'
 
 import {
-  getLocalStream
+  getLocalStream,
+  addLocalTrack
 } from "../../services/webrtc.service"
 
 const VideoPanel = () => {
@@ -16,11 +17,12 @@ const VideoPanel = () => {
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
         }
+        await addLocalTrack();
       } catch (error) {
         console.log("error in camera" + error);
       }
     }
-
+    startCamera()
   }, [])
 
 
