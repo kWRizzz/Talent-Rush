@@ -71,7 +71,7 @@ const InterviewRoom = () => {
         </div>
 
         <div className="col-span-12 mt-4">
-          <VideoPanel/>
+          <VideoPanel interviewId={roomId}/>
           <OutputPanel />
         </div>
       </div>

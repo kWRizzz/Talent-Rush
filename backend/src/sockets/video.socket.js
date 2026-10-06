@@ -36,4 +36,17 @@ const videoSocket= (io,socket)=>{
     )
 }
 
-module.exports=videoSocket
+const registerVideoSocket=async (io,socket) => {
+    socket.on(
+        OFFER,({interviewId,offer})=>{
+            socket.to(interviewId).emit(OFFER,{
+                offer,
+                senderId:socket.roomId
+            })
+        }
+    )
+}
+module.exports={
+    videoSocket,
+    registerVideoSocket
+}
