@@ -44,3 +44,22 @@ export const getLocalStream = async () => {
         }
     )
 }
+
+export const addLocalTrack=async () => {
+    const stream=await getLocalStream()
+    const peer= createPeerConnection();
+
+    const existingSenders =peer.getSenders().map(sender=>sender.track)
+
+    stream.getTrack().forEach(track => {
+        if(!existingSenders.includes(track)){
+            peer.addTrack(
+                track,
+                stream
+            );
+        }
+    });
+
+    return peer;
+}
+
