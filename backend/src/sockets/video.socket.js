@@ -48,5 +48,6 @@ const registerVideoSocket=async (io,socket) => {
 }
 module.exports={
     videoSocket,
-    registerVideoSocket
+    registerVideoSocket 
+    
 }
