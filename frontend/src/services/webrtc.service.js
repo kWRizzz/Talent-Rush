@@ -71,3 +71,16 @@ export const createoffer=async () => {
     return offer;
 }
 
+export const createAnswer=async (offer) => {
+    const peer= await addLocalTrack();
+
+    await peer.setRemoteDescription(
+        new RTCSessionDescription(offer)
+    )
+
+    const answer= await peer.createAnswer();
+
+    await peer.setLocalDescription(answer);
+
+    return answer;
+}
