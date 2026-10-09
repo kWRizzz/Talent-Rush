@@ -8,21 +8,25 @@ import {
 import {
   getLocalStream,
   addLocalTrack,
-  createoffer
+  createoffer,
+  createAnswer
 } from "../../services/webrtc.service"
 import { getSocket } from '../../services/socket.service'
 
 const VideoPanel = ({ interviewId }) => {
 
-  const handleOffer = async () => {
+  const handleOffer = async ({ offer, senderId }) => {
     try {
       const offer = await createoffer();
       const socket = getSocket();
+      const answer = await createAnswer(offer);
 
-      socket.emit("offer", {
+      socket.emit("answer", {
         interviewId,
-        offer
+        answer,
+        targetId: senderId
       })
+
     } catch (error) {
       console.log(
         "acnt start offer "
@@ -30,6 +34,15 @@ const VideoPanel = ({ interviewId }) => {
       )
     }
   }
+
+  useEffect(() => {
+    const socket = getSocket();
+    socket.on("offer",handleOffer);
+    return()=>{
+      socket.off("offer",handleOffer);
+    }
+  }, [interviewId])
+
 
   const videoRef = useRef(null);
 

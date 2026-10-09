@@ -34,6 +34,20 @@ const videoSocket= (io,socket)=>{
             {candidate}
         }
     )
+
+    socket.on(
+        "answer",
+        ({interviewId, answer, targetId})=>{
+            if(!targetId || !answer){
+                return
+            }
+
+            socket.to(targetId).emit("answer",{
+                answer,
+                senderId:socket.roomId
+            })
+        }
+    )
 }
 
 const registerVideoSocket=async (io,socket) => {
