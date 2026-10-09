@@ -9,7 +9,8 @@ import {
   getLocalStream,
   addLocalTrack,
   createoffer,
-  createAnswer
+  createAnswer,
+  getPeerConnection
 } from "../../services/webrtc.service"
 import { getSocket } from '../../services/socket.service'
 
@@ -37,10 +38,31 @@ const VideoPanel = ({ interviewId }) => {
 
   useEffect(() => {
     const socket = getSocket();
-    socket.on("offer",handleOffer);
-    return()=>{
-      socket.off("offer",handleOffer);
+    socket.on("offer", handleOffer);
+
+
+    const handleAnswer = async ({ answer }) => {
+      try {
+        const peer = addLocalTrack();
+        if (!peer) {
+          console.error("Peer connection not initialized");
+          return;
+        }
+        await peer.setRemoteDescription(
+          new RTCSessionDescription(answer)
+        )
+        console.log("Remote answer set successfully");
+      } catch (error) {
+        console.log(error);
+      }
+      socket.on("answer", handleAnswer)
+
+      return () => {
+        socket.off("offer", handleOffer);
+        socket.off("answer",handleAnswer);
+      }
     }
+
   }, [interviewId])
 
 

@@ -17,8 +17,12 @@ export const createPeerConnection = () => {
     peerConnection = new RTCPeerConnection(
         ICE_SERVER
     )
-
-    return peerConnection
+    peerConnection.onicecandidate=(event)=>{
+        if(event.candidate){
+            console.log("New ICE candidate:",event.candidate);
+        }
+    }
+    return peerConnection;
 }
 
 export const getPeerConnection = () => {
