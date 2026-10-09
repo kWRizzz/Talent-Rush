@@ -76,6 +76,20 @@ const VideoPanel = ({ interviewId }) => {
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
         }
+
+        const peer=getPeerConnection();
+        const socket=getSocket();
+        if(peer){
+          peer.onicecandidate =(event)=>{
+            if(event.candidate){
+              socket.emit("ice-candidate",{
+                interviewId,
+                candidate:event.candidate
+              })
+            }
+          }
+        }
+
         await addLocalTrack();
       } catch (error) {
         console.log("error in camera" + error);
