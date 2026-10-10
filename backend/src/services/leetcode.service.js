@@ -56,7 +56,8 @@ const CURATED_LEETCODE_PROBLEMS = {
         starterCode: "function addTwoNumbers(l1, l2) {\n    // Write your solution here\n}",
         starterCodes: {
             javascript: "function addTwoNumbers(l1, l2) {\n    // Write your solution here\n}",
-            python: "def addTwoNumbers(l1, l2):\n    # Write your solution here\n    pass"
+            python: "def addTwoNumbers(l1, l2):\n    # Write your solution here\n    pass",
+            java: "/**\n * Definition for singly-linked list.\n * public class ListNode {\n *     int val;\n *     ListNode next;\n *     ListNode() {}\n *     ListNode(int val) { this.val = val; }\n *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }\n * }\n */\nclass Solution {\n    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {\n        \n    }\n}"
         },
         example: [
             {
@@ -80,7 +81,8 @@ const CURATED_LEETCODE_PROBLEMS = {
         starterCode: "function isPalindrome(x) {\n    // Write your code here\n}",
         starterCodes: {
             javascript: "function isPalindrome(x) {\n    // Write your code here\n}",
-            python: "def isPalindrome(x: int) -> bool:\n    pass"
+            python: "def isPalindrome(x: int) -> bool:\n    pass",
+            java: "class Solution {\n    public boolean isPalindrome(int x) {\n        \n    }\n}"
         },
         example: [
             { input: "x = 121", output: "true", explaination: "121 reads as 121 from left to right and from right to left." },
@@ -103,7 +105,8 @@ const CURATED_LEETCODE_PROBLEMS = {
         starterCode: "function isValid(s) {\n    // Write your code here\n}",
         starterCodes: {
             javascript: "function isValid(s) {\n    // Write your code here\n}",
-            python: "def isValid(s: str) -> bool:\n    pass"
+            python: "def isValid(s: str) -> bool:\n    pass",
+            java: "class Solution {\n    public boolean isValid(String s) {\n        \n    }\n}"
         },
         example: [
             { input: "s = '()'", output: "true", explaination: "The brackets match." },
@@ -127,7 +130,8 @@ const CURATED_LEETCODE_PROBLEMS = {
         starterCode: "function mergeTwoLists(list1, list2) {\n    // Write your solution here\n}",
         starterCodes: {
             javascript: "function mergeTwoLists(list1, list2) {\n    // Write your solution here\n}",
-            python: "def mergeTwoLists(list1, list2):\n    pass"
+            python: "def mergeTwoLists(list1, list2):\n    pass",
+            java: "/**\n * Definition for singly-linked list.\n * public class ListNode {\n *     int val;\n *     ListNode next;\n *     ListNode() {}\n *     ListNode(int val) { this.val = val; }\n *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }\n * }\n */\nclass Solution {\n    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {\n        \n    }\n}"
         },
         example: [
             { input: "list1 = [1,2,4], list2 = [1,3,4]", output: "[1,1,2,3,4,4]", explaination: "Merged in ascending order." },
@@ -148,7 +152,8 @@ const CURATED_LEETCODE_PROBLEMS = {
         starterCode: "function maxSubArray(nums) {\n    // Write your code here (Kadane's algorithm)\n}",
         starterCodes: {
             javascript: "function maxSubArray(nums) {\n    // Write your code here\n}",
-            python: "def maxSubArray(nums: list[int]) -> int:\n    pass"
+            python: "def maxSubArray(nums: list[int]) -> int:\n    pass",
+            java: "class Solution {\n    public int maxSubArray(int[] nums) {\n        \n    }\n}"
         },
         example: [
             { input: "nums = [-2,1,-3,4,-1,2,1,-5,4]", output: "6", explaination: "The subarray [4,-1,2,1] has the largest sum 6." },
@@ -171,7 +176,8 @@ const CURATED_LEETCODE_PROBLEMS = {
         starterCode: "function climbStairs(n) {\n    // Write your code here\n}",
         starterCodes: {
             javascript: "function climbStairs(n) {\n    // Write your code here\n}",
-            python: "def climbStairs(n: int) -> int:\n    pass"
+            python: "def climbStairs(n: int) -> int:\n    pass",
+            java: "class Solution {\n    public int climbStairs(int n) {\n        \n    }\n}"
         },
         example: [
             { input: "n = 2", output: "2", explaination: "1. 1 step + 1 step\n2. 2 steps" },
@@ -193,7 +199,8 @@ const CURATED_LEETCODE_PROBLEMS = {
         starterCode: "function maxProfit(prices) {\n    // Write your code here\n}",
         starterCodes: {
             javascript: "function maxProfit(prices) {\n    // Write your code here\n}",
-            python: "def maxProfit(prices: list[int]) -> int:\n    pass"
+            python: "def maxProfit(prices: list[int]) -> int:\n    pass",
+            java: "class Solution {\n    public int maxProfit(int[] prices) {\n        \n    }\n}"
         },
         example: [
             { input: "prices = [7,1,5,3,6,4]", output: "5", explaination: "Buy on day 2 (price = 1) and sell on day 5 (price = 6), profit = 6-1 = 5." },
@@ -214,7 +221,8 @@ const CURATED_LEETCODE_PROBLEMS = {
         starterCode: "function isPalindrome(s) {\n    // Write your code here\n}",
         starterCodes: {
             javascript: "function isPalindrome(s) {\n    // Write your code here\n}",
-            python: "def isPalindrome(s: str) -> bool:\n    pass"
+            python: "def isPalindrome(s: str) -> bool:\n    pass",
+            java: "class Solution {\n    public boolean isPalindrome(String s) {\n        \n    }\n}"
         },
         example: [
             { input: "s = 'A man, a plan, a canal: Panama'", output: "true", explaination: "'amanaplanacanalpanama' is a palindrome." },
@@ -235,7 +243,8 @@ const CURATED_LEETCODE_PROBLEMS = {
         starterCode: "function reverseList(head) {\n    // Write your code here\n}",
         starterCodes: {
             javascript: "function reverseList(head) {\n    // Write your code here\n}",
-            python: "def reverseList(head):\n    pass"
+            python: "def reverseList(head):\n    pass",
+            java: "/**\n * Definition for singly-linked list.\n * public class ListNode {\n *     int val;\n *     ListNode next;\n *     ListNode() {}\n *     ListNode(int val) { this.val = val; }\n *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }\n * }\n */\nclass Solution {\n    public ListNode reverseList(ListNode head) {\n        \n    }\n}"
         },
         example: [
             { input: "head = [1,2,3,4,5]", output: "[5,4,3,2,1]", explaination: "Reversed list elements." },
@@ -256,7 +265,8 @@ const CURATED_LEETCODE_PROBLEMS = {
         starterCode: "function containsDuplicate(nums) {\n    // Write your code here\n}",
         starterCodes: {
             javascript: "function containsDuplicate(nums) {\n    // Write your code here\n}",
-            python: "def containsDuplicate(nums: list[int]) -> bool:\n    pass"
+            python: "def containsDuplicate(nums: list[int]) -> bool:\n    pass",
+            java: "class Solution {\n    public boolean containsDuplicate(int[] nums) {\n        \n    }\n}"
         },
         example: [
             { input: "nums = [1,2,3,1]", output: "true", explaination: "1 appears twice." },
@@ -278,7 +288,8 @@ const CURATED_LEETCODE_PROBLEMS = {
         starterCode: "function isAnagram(s, t) {\n    // Write your code here\n}",
         starterCodes: {
             javascript: "function isAnagram(s, t) {\n    // Write your code here\n}",
-            python: "def isAnagram(s: str, t: str) -> bool:\n    pass"
+            python: "def isAnagram(s: str, t: str) -> bool:\n    pass",
+            java: "class Solution {\n    public boolean isAnagram(String s, String t) {\n        \n    }\n}"
         },
         example: [
             { input: "s = 'anagram', t = 'nagaram'", output: "true", explaination: "All letters match in frequency." },

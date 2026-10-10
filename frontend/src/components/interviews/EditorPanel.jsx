@@ -8,6 +8,7 @@ import {
 } from '../../redux/slices/editorSlice';
 import Editor from '@monaco-editor/react';
 import LanguageSelector from './LanguageSelector';
+import { getStarterCodeForLanguage } from '../../utils/starterCode';
 import { getSocket } from '../../services/socket.service';
 import {
   FiPlay,
@@ -102,13 +103,14 @@ const EditorPanel = ({ interviewId }) => {
   };
 
   const handleResetCode = () => {
-    if (selectedQuestion?.starterCode) {
-      dispatch(setCode(selectedQuestion.starterCode));
+    const starter = getStarterCodeForLanguage(selectedQuestion, language);
+    if (starter) {
+      dispatch(setCode(starter));
       const socket = getSocket();
       if (socket && interviewId) {
         socket.emit('code-change', {
           interviewId,
-          code: selectedQuestion.starterCode,
+          code: starter,
         });
       }
     }
@@ -136,7 +138,7 @@ const EditorPanel = ({ interviewId }) => {
         <div className="flex items-center space-x-2">
           <LanguageSelector interviewId={interviewId} />
 
-          {selectedQuestion?.starterCode && (
+          {selectedQuestion && (
             <button
               onClick={handleResetCode}
               title="Reset to starter code"
@@ -191,7 +193,7 @@ const EditorPanel = ({ interviewId }) => {
         <Editor
           height="100%"
           theme="vs-dark"
-          language={language === 'javascript' ? 'javascript' : language}
+          language={language === 'java' ? 'java' : (language === 'javascript' ? 'javascript' : language)}
           value={code}
           onChange={handleChange}
           options={{
@@ -200,7 +202,7 @@ const EditorPanel = ({ interviewId }) => {
             minimap: { enabled: false },
             scrollBeyondLastLine: false,
             automaticLayout: true,
-            tabSize: 2,
+            tabSize: language === 'java' ? 4 : 2,
             fontFamily: '"Fira Code", monospace, "Courier New"',
             padding: { top: 12, bottom: 12 },
             renderLineHighlight: 'all',

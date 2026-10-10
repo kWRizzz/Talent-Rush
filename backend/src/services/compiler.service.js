@@ -1,12 +1,47 @@
 const { generateFile } = require("../compiler/generateFile");
 const deleteFile = require("../compiler/deleteFile");
 const executeCode = require('../compiler/executeJS');
+const { executeJava, buildJavaRunner, sanitizeJavaError } = require('../compiler/executeJava');
 const vm = require('vm');
 
 /**
  * Standard code execution
  */
 const runCode = async (language, code) => {
+    const lang = (language || "javascript").toLowerCase();
+
+    // Java direct execution
+    if (lang === "java") {
+        let filePath = null;
+        try {
+            let executableCode = code || "";
+            // If code has no main method, provide a clean runner message
+            if (!executableCode.includes("static void main")) {
+                const sanitized = executableCode.replace(/\bpublic\s+(class|interface|enum|record)\b/g, '$1');
+                executableCode = `class MainRunner {
+    public static void main(String[] args) {
+        System.out.println("Java class compiled successfully. To run your code, define 'public static void main(String[] args)' or click 'Run Code' with test cases.");
+    }
+}
+${sanitized}`;
+            }
+
+            filePath = await generateFile("java", executableCode);
+            const { stdout, stderr } = await executeJava(filePath);
+            deleteFile(filePath);
+            return {
+                success: true,
+                output: stdout || stderr || "Execution completed with no output."
+            };
+        } catch (error) {
+            if (filePath) deleteFile(filePath);
+            return {
+                success: false,
+                output: sanitizeJavaError(error.message || error.toString() || "Execution failed")
+            };
+        }
+    }
+
     try {
         const filePath = await generateFile(language, code);
         const output = await executeCode(filePath);
@@ -24,12 +59,83 @@ const runCode = async (language, code) => {
 };
 
 /**
+ * Runs Java code against test cases using reflection-based test harness
+ */
+const runJavaTestCases = async ({ code = "", testCases = [] }) => {
+    let filePath = null;
+    try {
+        const fullSource = buildJavaRunner(code, testCases);
+        filePath = await generateFile("java", fullSource);
+
+        const { stdout, stderr } = await executeJava(filePath);
+        deleteFile(filePath);
+        filePath = null;
+
+        const match = stdout.match(/===JAVA_RUNNER_RESULTS_START===([\s\S]*?)===JAVA_RUNNER_RESULTS_END===/);
+        if (!match) {
+            const errorOutput = sanitizeJavaError(stderr || stdout || "Execution failed to produce test results");
+            return {
+                success: false,
+                allPassed: false,
+                passedCount: 0,
+                totalCount: testCases.length,
+                results: testCases.map((tc, idx) => ({
+                    index: idx + 1,
+                    input: tc.input,
+                    expected: tc.expectedOutput || "",
+                    actual: "Error: " + errorOutput,
+                    passed: false,
+                    error: errorOutput
+                })),
+                stdout: errorOutput
+            };
+        }
+
+        const results = JSON.parse(match[1].trim());
+        const allPassed = results.length > 0 && results.every(r => r.passed);
+        const passedCount = results.filter(r => r.passed).length;
+        const combinedStdout = results.map(r => r.stdout ? `[Test ${r.index}] ${r.stdout}` : null).filter(Boolean).join('\n');
+
+        return {
+            success: true,
+            allPassed,
+            passedCount,
+            totalCount: results.length,
+            results,
+            stdout: combinedStdout
+        };
+    } catch (err) {
+        if (filePath) {
+            deleteFile(filePath);
+        }
+        const errorOutput = sanitizeJavaError(err.message || err.toString());
+        return {
+            success: false,
+            allPassed: false,
+            passedCount: 0,
+            totalCount: testCases.length,
+            results: testCases.map((tc, idx) => ({
+                index: idx + 1,
+                input: tc.input,
+                expected: tc.expectedOutput || "",
+                actual: "Compilation / Runtime Error:\n" + errorOutput,
+                passed: false,
+                error: errorOutput
+            })),
+            stdout: errorOutput
+        };
+    }
+};
+
+/**
  * Runs code against structured test cases.
- * Handles JavaScript functions via VM sandbox, comparing outputs against expected outputs.
+ * Handles JavaScript functions via VM sandbox, and Java solutions via reflection harness.
  */
 const runTestCases = async ({ language = "javascript", code = "", testCases = [] }) => {
+    const lang = (language || "javascript").toLowerCase();
+
     if (!testCases || testCases.length === 0) {
-        const directRun = await runCode(language, code);
+        const directRun = await runCode(lang, code);
         return {
             success: directRun.success,
             allPassed: directRun.success,
@@ -44,6 +150,10 @@ const runTestCases = async ({ language = "javascript", code = "", testCases = []
             }],
             stdout: directRun.output
         };
+    }
+
+    if (lang === "java") {
+        return await runJavaTestCases({ code, testCases });
     }
 
     if (language.toLowerCase() === "javascript" || language.toLowerCase() === "js") {

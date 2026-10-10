@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectedQuestion as selectQuestion } from '../../redux/slices/questionSlice';
 import { setCode, clearTestResults } from '../../redux/slices/editorSlice';
 import { getSocket } from '../../services/socket.service';
+import { getStarterCodeForLanguage } from '../../utils/starterCode';
 
 const QuestionCard = ({ question, index, interviewId }) => {
     const dispatch = useDispatch();
@@ -10,14 +11,18 @@ const QuestionCard = ({ question, index, interviewId }) => {
     const { selectedQuestion } = useSelector(
         (state) => state.question
     );
+    const { language } = useSelector(
+        (state) => state.editor
+    );
 
     const isSelected = selectedQuestion?._id === question._id;
 
     const handleSelect = () => {
         dispatch(selectQuestion(question));
         dispatch(clearTestResults());
-        if (question.starterCode) {
-            dispatch(setCode(question.starterCode));
+        const starter = getStarterCodeForLanguage(question, language);
+        if (starter) {
+            dispatch(setCode(starter));
         }
 
         // Notify other participants in the room
@@ -27,6 +32,12 @@ const QuestionCard = ({ question, index, interviewId }) => {
                 interviewId,
                 question
             });
+            if (starter) {
+                socket.emit("code-change", {
+                    interviewId,
+                    code: starter
+                });
+            }
         }
     };
 

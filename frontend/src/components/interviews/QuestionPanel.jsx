@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   addLeetCodeQuestion,
@@ -8,6 +8,7 @@ import {
 } from '../../redux/slices/questionSlice';
 import { setCode, clearTestResults } from '../../redux/slices/editorSlice';
 import { getSocket } from '../../services/socket.service';
+import { getStarterCodeForLanguage } from '../../utils/starterCode';
 import QuestionCard from './QuestionCard';
 import {
   FiPlus,
@@ -46,6 +47,10 @@ const QuestionPanel = ({ interviewId }) => {
     leetCodeError,
   } = useSelector((state) => state.question);
 
+  const { language } = useSelector((state) => state.editor);
+  const languageRef = useRef(language);
+  languageRef.current = language;
+
   const activeQuestion = selectedQuestion || searchedQuestion;
 
   // Sync questions from socket when other peer adds or selects one
@@ -63,8 +68,9 @@ const QuestionPanel = ({ interviewId }) => {
       if (question) {
         dispatch(selectQuestionAction(question));
         dispatch(clearTestResults());
-        if (question.starterCode) {
-          dispatch(setCode(question.starterCode));
+        const starter = getStarterCodeForLanguage(question, languageRef.current);
+        if (starter) {
+          dispatch(setCode(starter));
         }
       }
     };
@@ -85,8 +91,9 @@ const QuestionPanel = ({ interviewId }) => {
     try {
       const result = await dispatch(previewLeetCodeQuestion(num)).unwrap();
       if (result) {
-        if (result.starterCode) {
-          dispatch(setCode(result.starterCode));
+        const starter = getStarterCodeForLanguage(result, languageRef.current);
+        if (starter) {
+          dispatch(setCode(starter));
         }
         setActiveTab('detail');
       }
@@ -116,8 +123,9 @@ const QuestionPanel = ({ interviewId }) => {
             question: result,
           });
         }
-        if (result.starterCode) {
-          dispatch(setCode(result.starterCode));
+        const starter = getStarterCodeForLanguage(result, languageRef.current);
+        if (starter) {
+          dispatch(setCode(starter));
         }
         setProblemNumber('');
         setShowAddForm(false);
