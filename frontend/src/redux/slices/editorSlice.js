@@ -61,10 +61,10 @@ const editorSlice = createSlice({
         setRunning:(state,action)=>{
             state.isRunning=action.payload
         },
-        resetEditor:(state,action)=>{
-            state.language="javascript",
-            state.code="",
-            state.output="",
+        resetEditor:(state)=>{
+            state.language="javascript";
+            state.code="";
+            state.output="";
             state.isRunning=false
         }
     },

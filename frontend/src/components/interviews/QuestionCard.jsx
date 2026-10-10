@@ -3,7 +3,7 @@ import{
     useDispatch,
     useSelector
 }from "react-redux"
-import { selectedQuestion } from '../../redux/slices/questionSlice'
+import { selectedQuestion as selectQuestion } from '../../redux/slices/questionSlice'
 import { setCode } from '../../redux/slices/editorSlice'
 
 
@@ -14,11 +14,11 @@ const QuestionCard = ({ question, index }) => {
         (state)=>state.question
     )
 
-    const isSelected= selectedQuestion?._id===question.id
+    const isSelected= selectedQuestion?._id===question._id
 
     const handleSelect= () => {
         dispatch(
-            selectedQuestion(question)
+            selectQuestion(question)
         )
         dispatch(
             setCode(question.starterCode || "")

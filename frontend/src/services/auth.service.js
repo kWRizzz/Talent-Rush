@@ -11,7 +11,7 @@ export const register= async (userData) => {
         body:JSON.stringify(userData)
     })
 
-    const data= response.json()
+    const data= await response.json()
     return data
 }
 
@@ -24,7 +24,7 @@ export const login =async (userData) => {
         credentials:"include",
         body:JSON.stringify(userData)
     })
-    const data= response.json()
+    const data= await response.json()
     return data
 }
 
@@ -36,7 +36,7 @@ export const logout= async () => {
 
     })
 
-    const data= response.json();
+    const data= await response.json();
     return data
 }
 

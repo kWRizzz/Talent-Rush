@@ -57,7 +57,7 @@ export const loadUser=createAsyncThunk(
     "auth/loadUser",
     async (_,thunkAPI) => {
         try {
-            return getUser()
+            return await getUser()
         } catch (error) {
             return thunkAPI.rejectWithValue(
                 error.message

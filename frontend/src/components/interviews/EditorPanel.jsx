@@ -25,7 +25,7 @@ const EditorPanel = ({interviewId }) => {
 
   const handleChange = (value) => {
     const newCode= value || "";
-    dispatch(newCode);
+    dispatch(setCode(newCode));
 
     const socket= getSocket();
 
@@ -43,14 +43,14 @@ const EditorPanel = ({interviewId }) => {
       dispatch(setCode(code))
     }
     
-    socket.on("code-update",{
+    socket.on("code-update",
       handleCodeUpdate
-    })
+    )
   
     return () => {
-      socket.off("code-update",{
+      socket.off("code-update",
         handleCodeUpdate
-      })
+      )
     }
   }, [dispatch])
   

@@ -45,8 +45,8 @@ const questionSlice = createSlice(
         extraReducers: (builder) => {
 
             builder.addCase(fetchInterviewQuestions.pending, (state) => {
-                state.isLoading = true,
-                    state.error = false
+                state.isLoading = true;
+                state.error = null
             })
 
             builder.addCase(fetchInterviewQuestions.fulfilled, (state, action) => {

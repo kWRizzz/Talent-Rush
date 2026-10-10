@@ -47,15 +47,17 @@ export const getLocalStream = async () => {
             audio: true
         }
     )
+
+    return localStream;
 }
 
-export const addLocalTrack=async () => {
+export const addLocalTracks=async () => {
     const stream=await getLocalStream()
     const peer= createPeerConnection();
 
     const existingSenders =peer.getSenders().map(sender=>sender.track)
 
-    stream.getTrack().forEach(track => {
+    stream.getTracks().forEach(track => {
         if(!existingSenders.includes(track)){
             peer.addTrack(
                 track,
@@ -67,16 +69,16 @@ export const addLocalTrack=async () => {
     return peer;
 }
 
-export const createoffer=async () => {
-    const peer= await addLocalTrack();
-    const offer= await peer.createoffer()
+export const createOffer=async () => {
+    const peer= await addLocalTracks();
+    const offer= await peer.createOffer()
     await peer.setLocalDescription(offer);
 
     return offer;
 }
 
 export const createAnswer=async (offer) => {
-    const peer= await addLocalTrack();
+    const peer= await addLocalTracks();
 
     await peer.setRemoteDescription(
         new RTCSessionDescription(offer)

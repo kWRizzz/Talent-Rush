@@ -27,15 +27,15 @@ const VideoPanel = ({ interviewId }) => {
   const ensureMedia = useCallback(async () => {
     const stream = await getLocalStream();
 
-    peer.onconnectionstatechange = () => {
-      setConnectionState(peer.connectionState);
-    };
-
     if (videoRef.current) {
       videoRef.current.srcObject = stream;
     }
 
     const peer = await addLocalTracks();
+
+    peer.onconnectionstatechange = () => {
+      setConnectionState(peer.connectionState);
+    };
 
     peer.ontrack = (event) => {
       const remoteStream = event.streams?.[0];

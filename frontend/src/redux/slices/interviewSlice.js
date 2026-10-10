@@ -45,7 +45,7 @@ export const createNewInterview =createAsyncThunk(
 export const removeInterview =createAsyncThunk(
     "interview/removeInterview",
     async (
-        data,
+        id,
         thunkAPI
     ) => {
         try {
@@ -74,12 +74,12 @@ const interviewSlice = createSlice({
         })
 
         builder.addCase(fetchMyInterviews.fulfilled,(state,action)=>{
-            state.isLoading=false,
+            state.isLoading=false;
             state.interviews= action.payload
         })
 
         builder.addCase(fetchMyInterviews.rejected,(state,action)=>{
-            state.isLoading=false,
+            state.isLoading=false;
             state.error=action.payload
         })
     }
