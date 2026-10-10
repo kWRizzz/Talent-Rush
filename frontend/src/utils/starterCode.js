@@ -94,6 +94,11 @@ class Solution {
         
     }
 }`,
+  198: `class Solution {
+    public int rob(int[] nums) {
+        
+    }
+}`,
 };
 
 /**
@@ -150,7 +155,8 @@ export const getStarterCodeForLanguage = (question, language = 'javascript') => 
         (title.includes('valid palindrome') && id === '125') ||
         (title.includes('reverse linked list') && id === '206') ||
         (title.includes('contains duplicate') && id === '217') ||
-        (title.includes('valid anagram') && id === '242')
+        (title.includes('valid anagram') && id === '242') ||
+        (title.includes('house robber') && id === '198')
       ) {
         return code;
       }

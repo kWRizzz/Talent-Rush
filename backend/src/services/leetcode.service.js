@@ -301,6 +301,40 @@ const CURATED_LEETCODE_PROBLEMS = {
         ],
         constraints: ["1 <= s.length, t.length <= 5 * 10^4", "s and t consist of lowercase English letters."],
         topicTags: ["Hash Table", "String", "Sorting"]
+    },
+    198: {
+        leetcodeId: 198,
+        title: "House Robber",
+        difficulty: "medium",
+        description: "You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed, the only constraint stopping you from robbing each of them is that adjacent houses have security systems connected and it will automatically contact the police if two adjacent houses were broken into on the same night.\n\nGiven an integer array nums representing the amount of money of each house, return the maximum amount of money you can rob tonight without alerting the police.",
+        starterCode: "/**\n * @param {number[]} nums\n * @return {number}\n */\nfunction rob(nums) {\n    // Write your solution here\n    \n}",
+        starterCodes: {
+            javascript: "function rob(nums) {\n    // Write your solution here\n    \n}",
+            python: "class Solution:\n    def rob(self, nums: list[int]) -> int:\n        pass",
+            cpp: "#include <vector>\nusing namespace std;\n\nclass Solution {\npublic:\n    int rob(vector<int>& nums) {\n        \n    }\n};",
+            java: "class Solution {\n    public int rob(int[] nums) {\n        \n    }\n}"
+        },
+        example: [
+            {
+                input: "nums = [1,2,3,1]",
+                output: "4",
+                explaination: "Rob house 1 (money = 1) and then rob house 3 (money = 3). Total amount you can rob = 1 + 3 = 4."
+            },
+            {
+                input: "nums = [2,7,9,3,1]",
+                output: "12",
+                explaination: "Rob house 1 (money = 2), rob house 3 (money = 9) and rob house 5 (money = 1). Total amount you can rob = 2 + 9 + 1 = 12."
+            }
+        ],
+        testCases: [
+            { input: "[1,2,3,1]", expectedOutput: "4" },
+            { input: "[2,7,9,3,1]", expectedOutput: "12" }
+        ],
+        constraints: [
+            "1 <= nums.length <= 100",
+            "0 <= nums[i] <= 400"
+        ],
+        topicTags: ["Array", "Dynamic Programming"]
     }
 };
 
@@ -336,13 +370,14 @@ function extractExamplesAndTestCases(content, sampleTestCase, exampleTestcases) 
     const examples = [];
     const testCases = [];
 
-    const exampleRegex = /<strong>Example\s*(\d+)?:?<\/strong>[\s\S]*?<pre>([\s\S]*?)<\/pre>/gi;
+    // Match Example blocks with any HTML attributes (e.g. <strong class="example">Example 1:</strong>)
+    const exampleRegex = /<(?:strong|b)[^>]*>\s*Example\s*(\d+)?:?\s*<\/(?:strong|b)>[\s\S]*?<pre>([\s\S]*?)<\/pre>/gi;
     let match;
     while ((match = exampleRegex.exec(content)) !== null) {
         const rawExample = match[2];
-        const inputMatch = /Input:\s*([\s\S]*?)(?=Output:|$)/i.exec(rawExample);
-        const outputMatch = /Output:\s*([\s\S]*?)(?=Explanation:|$)/i.exec(rawExample);
-        const explMatch = /Explanation:\s*([\s\S]*?)$/i.exec(rawExample);
+        const inputMatch = /(?:Input|Given):\s*([\s\S]*?)(?=(?:Output|Result):|$)/i.exec(rawExample);
+        const outputMatch = /(?:Output|Result):\s*([\s\S]*?)(?=(?:Explanation|Note):|$)/i.exec(rawExample);
+        const explMatch = /(?:Explanation|Note):\s*([\s\S]*?)$/i.exec(rawExample);
 
         const inputStr = inputMatch ? stripHtml(inputMatch[1]).trim() : "";
         const outputStr = outputMatch ? stripHtml(outputMatch[1]).trim() : "";
@@ -361,8 +396,41 @@ function extractExamplesAndTestCases(content, sampleTestCase, exampleTestcases) 
         }
     }
 
+    // Secondary fallback: find any <pre> block containing Input: and Output:
+    if (testCases.length === 0) {
+        const preRegex = /<pre>([\s\S]*?)<\/pre>/gi;
+        let preMatch;
+        while ((preMatch = preRegex.exec(content)) !== null) {
+            const rawExample = preMatch[1];
+            if (/Input:/i.test(rawExample) && /Output:/i.test(rawExample)) {
+                const inputMatch = /(?:Input|Given):\s*([\s\S]*?)(?=(?:Output|Result):|$)/i.exec(rawExample);
+                const outputMatch = /(?:Output|Result):\s*([\s\S]*?)(?=(?:Explanation|Note):|$)/i.exec(rawExample);
+                const explMatch = /(?:Explanation|Note):\s*([\s\S]*?)$/i.exec(rawExample);
+
+                const inputStr = inputMatch ? stripHtml(inputMatch[1]).trim() : "";
+                const outputStr = outputMatch ? stripHtml(outputMatch[1]).trim() : "";
+                const explStr = explMatch ? stripHtml(explMatch[1]).trim() : "";
+
+                if (inputStr) {
+                    examples.push({
+                        input: inputStr,
+                        output: outputStr,
+                        explaination: explStr
+                    });
+                    testCases.push({
+                        input: inputStr,
+                        expectedOutput: outputStr
+                    });
+                }
+            }
+        }
+    }
+
+    // Fallback: raw exampleTestcases
     if (testCases.length === 0 && exampleTestcases) {
-        const rawCases = exampleTestcases.split('\n\n').filter(Boolean);
+        const rawCases = exampleTestcases.includes('\n\n')
+            ? exampleTestcases.split('\n\n').filter(Boolean)
+            : exampleTestcases.split('\n').filter(Boolean);
         rawCases.forEach((rc) => {
             testCases.push({
                 input: rc.trim(),

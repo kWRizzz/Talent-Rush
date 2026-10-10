@@ -40,11 +40,12 @@ const executeJava = async (filePath, options = {}) => {
  * Generates a complete Java source file with MainRunner as the first class to run
  * LeetCode solutions against test cases using reflection.
  */
-const buildJavaRunner = (userCode, testCases = []) => {
+const buildJavaRunner = (userCode, testCases = [], options = {}) => {
     // Single-file Java source cannot declare public classes unless matching file name
     const sanitizedUserCode = (userCode || "").replace(/\bpublic\s+(class|interface|enum|record)\b/g, '$1');
     const hasListNode = /\bclass\s+ListNode\b/.test(sanitizedUserCode);
     const hasTreeNode = /\bclass\s+TreeNode\b/.test(sanitizedUserCode);
+    const targetMethodName = (options.targetMethodName || options.methodName || "").trim();
 
     const testCasesLiteral = testCases.map(tc => 
         `        { ${JSON.stringify(tc.input || "")}, ${JSON.stringify(tc.expectedOutput || "")} }`
@@ -55,6 +56,7 @@ import java.lang.reflect.*;
 import java.util.*;
 
 class MainRunner {
+    private static final String TARGET_METHOD_NAME = ${JSON.stringify(targetMethodName)};
     private static final String[][] TEST_CASES = new String[][] {
 ${testCasesLiteral}
     };
@@ -65,13 +67,9 @@ ${testCasesLiteral}
 
         try {
             Solution sol = new Solution();
-            Method targetMethod = null;
-            for (Method m : Solution.class.getDeclaredMethods()) {
-                if (Modifier.isPublic(m.getModifiers()) && !m.getName().equals("main")) {
-                    targetMethod = m;
-                    break;
-                }
-            }
+            String sampleInput = TEST_CASES.length > 0 ? TEST_CASES[0][0] : "";
+            Method targetMethod = findTargetMethod(Solution.class, TARGET_METHOD_NAME, sampleInput);
+
             if (targetMethod == null) {
                 origOut.println("===JAVA_RUNNER_RESULTS_START===");
                 origOut.println("[]");
@@ -149,7 +147,83 @@ ${testCasesLiteral}
         }
     }
 
+    private static boolean isHelperMethod(String name) {
+        String n = name.toLowerCase();
+        return n.equals("f") || n.equals("helper") || n.equals("dfs") || n.equals("bfs") ||
+               n.equals("solve") || n.equals("recurse") || n.equals("backtrack") ||
+               n.equals("calc") || n.equals("compute") || n.length() <= 2;
+    }
+
+    private static int determineParamCount(String input) {
+        String[] lines = input.split("\\r?\\n");
+        List<String> valid = new ArrayList<>();
+        for (String l : lines) {
+            String t = l.trim();
+            if (!t.isEmpty()) valid.add(t);
+        }
+        if (valid.size() > 1) return valid.size();
+        if (valid.size() == 1) {
+            String single = valid.get(0);
+            int depth = 0;
+            boolean inQuote = false;
+            int commas = 0;
+            for (int i = 0; i < single.length(); i++) {
+                char c = single.charAt(i);
+                if (c == '"') inQuote = !inQuote;
+                else if (!inQuote && (c == '[' || c == '{' || c == '(')) depth++;
+                else if (!inQuote && (c == ']' || c == '}' || c == ')')) depth--;
+                else if (!inQuote && depth == 0 && c == ',') commas++;
+            }
+            if (commas > 0) return commas + 1;
+        }
+        return 1;
+    }
+
+    private static Method findTargetMethod(Class<?> clazz, String preferredName, String sampleInput) {
+        List<Method> publicMethods = new ArrayList<>();
+        for (Method m : clazz.getDeclaredMethods()) {
+            if (Modifier.isPublic(m.getModifiers()) && !m.getName().equals("main")) {
+                publicMethods.add(m);
+            }
+        }
+        if (publicMethods.isEmpty()) return null;
+
+        // 1. Check preferred method name if provided
+        if (preferredName != null && !preferredName.trim().isEmpty()) {
+            for (Method m : publicMethods) {
+                if (m.getName().equalsIgnoreCase(preferredName.trim())) return m;
+            }
+        }
+
+        // 2. Match method by expected parameter count from test case input
+        int expectedParams = determineParamCount(sampleInput);
+        List<Method> matchingParam = new ArrayList<>();
+        for (Method m : publicMethods) {
+            if (m.getParameterCount() == expectedParams) matchingParam.add(m);
+        }
+
+        if (matchingParam.size() == 1) return matchingParam.get(0);
+
+        if (matchingParam.size() > 1) {
+            for (Method m : matchingParam) {
+                if (!isHelperMethod(m.getName())) return m;
+            }
+            return matchingParam.get(matchingParam.size() - 1);
+        }
+
+        // 3. Fallback: filter out common algorithm helper method names
+        for (Method m : publicMethods) {
+            if (!isHelperMethod(m.getName())) return m;
+        }
+
+        return publicMethods.get(publicMethods.size() - 1);
+    }
+
     private static boolean compareResult(String actual, String expected) {
+        if (expected == null || expected.trim().isEmpty()) {
+            return true;
+        }
+
         String a = actual.replaceAll("\\\\s+", "").toLowerCase();
         String e = expected.replaceAll("\\\\s+", "").toLowerCase();
         if (a.equals(e)) return true;

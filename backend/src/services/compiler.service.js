@@ -58,13 +58,28 @@ ${sanitized}`;
     }
 };
 
+const extractMethodName = (code = "") => {
+    const helperNames = new Set(["f", "helper", "dfs", "bfs", "solve", "recurse", "backtrack", "calc", "compute", "main"]);
+    const matches = [...code.matchAll(/public\s+[a-zA-Z0-9_<>[\]]+\s+([a-zA-Z0-9_]+)\s*\(/g)];
+    for (const m of matches) {
+        if (!helperNames.has(m[1].toLowerCase()) && m[1].length > 2) {
+            return m[1];
+        }
+    }
+    if (matches.length > 0) {
+        return matches[matches.length - 1][1];
+    }
+    return "";
+};
+
 /**
  * Runs Java code against test cases using reflection-based test harness
  */
-const runJavaTestCases = async ({ code = "", testCases = [] }) => {
+const runJavaTestCases = async ({ code = "", testCases = [], methodName = "" }) => {
     let filePath = null;
     try {
-        const fullSource = buildJavaRunner(code, testCases);
+        const resolvedMethod = methodName || extractMethodName(code);
+        const fullSource = buildJavaRunner(code, testCases, { targetMethodName: resolvedMethod });
         filePath = await generateFile("java", fullSource);
 
         const { stdout, stderr } = await executeJava(filePath);
@@ -131,7 +146,7 @@ const runJavaTestCases = async ({ code = "", testCases = [] }) => {
  * Runs code against structured test cases.
  * Handles JavaScript functions via VM sandbox, and Java solutions via reflection harness.
  */
-const runTestCases = async ({ language = "javascript", code = "", testCases = [] }) => {
+const runTestCases = async ({ language = "javascript", code = "", testCases = [], methodName = "" }) => {
     const lang = (language || "javascript").toLowerCase();
 
     if (!testCases || testCases.length === 0) {
@@ -153,7 +168,7 @@ const runTestCases = async ({ language = "javascript", code = "", testCases = []
     }
 
     if (lang === "java") {
-        return await runJavaTestCases({ code, testCases });
+        return await runJavaTestCases({ code, testCases, methodName });
     }
 
     if (language.toLowerCase() === "javascript" || language.toLowerCase() === "js") {
