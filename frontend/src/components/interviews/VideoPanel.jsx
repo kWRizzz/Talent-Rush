@@ -11,6 +11,7 @@ import {
 } from "../../services/webrtc.service";
 
 import { getSocket } from "../../services/socket.service";
+import { useState } from "react";
 
 const VideoPanel = ({ interviewId }) => {
   const videoRef = useRef(null);
@@ -20,8 +21,15 @@ const VideoPanel = ({ interviewId }) => {
   const pendingLocalCandidatesRef = useRef([]);
   const pendingRemoteCandidatesRef = useRef([]);
 
+  const [connectionState, setConnectionState] = useState("new");
+
+
   const ensureMedia = useCallback(async () => {
     const stream = await getLocalStream();
+
+    peer.onconnectionstatechange = () => {
+      setConnectionState(peer.connectionState);
+    };
 
     if (videoRef.current) {
       videoRef.current.srcObject = stream;
@@ -211,6 +219,11 @@ const VideoPanel = ({ interviewId }) => {
 
   return (
     <div className="border rounded p-3 space-y-3">
+
+      <p className="text-sm">
+        Connection Status: <strong>{connectionState}</strong>
+      </p>
+
       <div>
         <p className="text-sm mb-1">Your Video</p>
         <video
