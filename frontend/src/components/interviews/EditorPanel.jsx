@@ -187,7 +187,7 @@ const EditorPanel = ({ interviewId }) => {
       </div>
 
       {/* Monaco Editor Container */}
-      <div className="flex-1 w-full min-h-[380px]" onKeyDown={(e) => e.stopPropagation()}>
+      <div className="flex-1 w-full min-h-0" onKeyDown={(e) => e.stopPropagation()}>
         <Editor
           height="100%"
           theme="vs-dark"

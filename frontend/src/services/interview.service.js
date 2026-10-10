@@ -1,21 +1,43 @@
 export const createInterview = async (
     interviewData
 ) => {
-    const response= await fetch(
+    const response = await fetch(
         "http://localhost:3000/api/interview/create",
         {
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
             },
-            credentials:'include',
-            body:JSON.stringify(interviewData)
+            credentials: 'include',
+            body: JSON.stringify(interviewData)
         }
-    )
-    const data= await response.json()
-    console.log(data);
-    return data
+    );
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.message || "Failed to create interview");
+    }
+    return data;
 }
+
+export const joinInterview = async (roomId) => {
+    try {
+        const response = await fetch(
+            `http://localhost:3000/api/interview/${roomId}`,
+            {
+                method: "POST",
+                credentials: "include"
+            }
+        );
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.message || "Interview room not found");
+        }
+        return data;
+    } catch (error) {
+        console.error("Error joining interview:", error);
+        throw error;
+    }
+};
 
 export const getMyInterviews = async () => {
     try {

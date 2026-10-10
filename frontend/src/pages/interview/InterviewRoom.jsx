@@ -21,6 +21,7 @@ import {
   FiCheck,
   FiLogOut,
   FiUsers,
+  FiShare2,
 } from 'react-icons/fi';
 
 const InterviewRoom = () => {
@@ -36,6 +37,7 @@ const InterviewRoom = () => {
   const [leftTab, setLeftTab] = useState('questions'); // "questions" | "chat"
   const [topTab, setTopTab] = useState('video'); // "video" (default on top) | "output"
   const [copied, setCopied] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
   const [roomParticipants, setRoomParticipants] = useState([]);
 
   // Auto-switch top pane to Output/Test results when tests run
@@ -96,6 +98,15 @@ const InterviewRoom = () => {
     }
   };
 
+  const copyInviteLink = () => {
+    if (roomId) {
+      const inviteUrl = `${window.location.origin}/interview/${roomId}`;
+      navigator.clipboard.writeText(inviteUrl);
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 2500);
+    }
+  };
+
   const handleLeave = () => {
     navigate('/dashboard');
   };
@@ -104,7 +115,7 @@ const InterviewRoom = () => {
     <div className="h-screen w-screen flex flex-col bg-[#0e0e0e] text-white overflow-hidden font-body selection:bg-primary/40 selection:text-white">
       {/* Top Navbar */}
       <header className="h-14 px-4 bg-[#131313] border-b border-white/10 flex items-center justify-between z-20 shrink-0">
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-3 sm:space-x-4">
           <div
             onClick={() => navigate('/dashboard')}
             className="cursor-pointer flex items-center space-x-2"
@@ -132,6 +143,25 @@ const InterviewRoom = () => {
               )}
             </button>
           </div>
+
+          {/* Share Link Button */}
+          <button
+            onClick={copyInviteLink}
+            title="Copy full invite URL to send to candidates or co-interviewers"
+            className="flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-primary/15 hover:bg-primary/25 text-primary border border-primary/30 transition-all cursor-pointer shadow-[0_0_12px_rgba(46,91,255,0.2)]"
+          >
+            {copiedLink ? (
+              <>
+                <FiCheck className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="text-emerald-400 font-medium">Link Copied!</span>
+              </>
+            ) : (
+              <>
+                <FiShare2 className="w-3.5 h-3.5" />
+                <span>Share Link</span>
+              </>
+            )}
+          </button>
 
           {/* Active Participants count */}
           {roomParticipants.length > 0 && (
@@ -203,9 +233,9 @@ const InterviewRoom = () => {
         </div>
 
         {/* Right Pane: Video Call UP, Code Editor DOWN - 7 cols */}
-        <div className="lg:col-span-7 flex flex-col h-full min-h-0 space-y-3">
+        <div className="lg:col-span-7 flex flex-col h-full min-h-0 space-y-2.5">
           {/* TOP HALF: Video Call Screens (with Test Output Tab) */}
-          <div className="flex-[2] flex flex-col min-h-0 overflow-hidden">
+          <div className="h-[270px] xl:h-[290px] shrink-0 flex flex-col min-h-0 overflow-hidden">
             {/* Top Pane Switcher */}
             <div className="flex items-center space-x-2 mb-2 bg-[#131313] p-1 rounded-xl border border-white/10 shrink-0 self-start">
               <button
@@ -244,7 +274,7 @@ const InterviewRoom = () => {
           </div>
 
           {/* BOTTOM HALF: Code Editor (Down Below) */}
-          <div className="flex-[3] min-h-0 overflow-hidden">
+          <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
             <EditorPanel interviewId={roomId} />
           </div>
         </div>

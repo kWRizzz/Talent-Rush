@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const interviewModel = require("../models/Interview")
 const {
     createInterviewService,
@@ -23,10 +24,23 @@ const createInterview = async (
             });
         }
 
+        let candidateId = null;
+        let candidateName = '';
+
+        if (candidate && typeof candidate === 'string' && candidate.trim()) {
+            const trimmed = candidate.trim();
+            if (mongoose.Types.ObjectId.isValid(trimmed) && trimmed.length === 24) {
+                candidateId = trimmed;
+            } else {
+                candidateName = trimmed;
+            }
+        }
+
         const interview = await createInterviewService({
-            title,
-            candidate,
-            scheduledAt,
+            title: title.trim(),
+            candidate: candidateId || undefined,
+            candidateName,
+            scheduledAt: scheduledAt || undefined,
             interviewer: req.user.userId
         });
 
@@ -178,16 +192,17 @@ const joinInterview = async (
     res
 ) => {
     try {
+        const roomId = req.params.roomId || req.params.roomid;
         const interview = await interviewModel.findOne(
             {
-                roomId: req.params.roomId
+                roomId: roomId
             }
-        );
+        ).populate("questions");
 
-        if (!interview) return res.status(400).json({
-            message: "no interview found ",
+        if (!interview) return res.status(404).json({
+            message: "No interview room found with this ID",
             success: false
-        })
+        });
 
         return res.status(200).json({
             success: true,
@@ -197,7 +212,6 @@ const joinInterview = async (
         return res.status(500).json({
             message: error.message
         });
-
     }
 }
 

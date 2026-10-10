@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const NavBar = () => {
+const NavBar = ({ onOpenJoinModal }) => {
     return (
         <nav
             className='w-full flex items-center justify-between px-6 py-5 md:px-12 bg-transparent text-white font-body'
@@ -29,7 +29,7 @@ const NavBar = () => {
                 {/* lik1 */}
 
                 <Link
-                    to='/features/CreateInterview'
+                    to='/create-interview'
                     className='relative hover:text-white group transition-colors  '
                 >
                     Create
@@ -41,10 +41,10 @@ const NavBar = () => {
                 {/* lik1.2 */}
 
                 <Link
-                    to='/features/MyInterviews'
+                    to='/my-interviews'
                     className='relative hover:text-white group transition-colors  '
                 >
-                    Your Interview
+                    Your Interviews
                     <span
                         className=' absolute -bottom-1.5 left-0  h-[1px] bg-neon-gradient rounded-full w-0 transition-all duration-300 group-hover:w-full'
                     ></span>
@@ -70,7 +70,7 @@ const NavBar = () => {
                     href="#documentation"
                     className=' relative group hover:text-white transition-colors '
                 >
-                    Doucumentation
+                    Documentation
                     <span
                         className=' absolute w-0 -bottom-1.5 left-0 h-[1px] bg-neon-gradient rounded-full transition-all duration-300 group-hover:w-full'
                     ></span>
@@ -79,12 +79,21 @@ const NavBar = () => {
 
             {/* auth */}
             <div
-                className=' flex items-center space-x-5 text-sm font-medium'
+                className=' flex items-center space-x-3 text-sm font-medium'
             >
+                {onOpenJoinModal && (
+                    <button
+                        onClick={onOpenJoinModal}
+                        className='bg-[#1a1919] hover:bg-white/10 text-white px-4 py-2 rounded-full border border-white/10 transition-all cursor-pointer text-xs font-semibold'
+                    >
+                        Join Room
+                    </button>
+                )}
+
                 {/* login */}
                 <Link
                     to='/login'
-                    className=' bg-neon-gradient  hover:opacity-90 px-6 py-2.5 rounded-full text-gray-300 hover:text-white transition-all  shadow-[0_0_24px_rgba(46,91,255,0.25)] flex items-center justify-center'
+                    className=' bg-neon-gradient hover:opacity-90 px-5 py-2 rounded-full text-white transition-all shadow-[0_0_24px_rgba(46,91,255,0.25)] flex items-center justify-center text-xs font-semibold'
                 >
                     LogIn
                 </Link>
@@ -92,7 +101,7 @@ const NavBar = () => {
                 {/* signin */}
                 <Link
                     to='/signin'
-                    className= 'bg-neon-gradient hover:opacity-90 px-6 py-2.5 rounded-full  text-gray-300 hover:text-white transition-all shadow-[0_0_24px_rgba(46,91,255,0.25)] flex items-center justify-center'
+                    className= 'bg-white/5 hover:bg-white/10 px-5 py-2 rounded-full text-gray-300 hover:text-white transition-all border border-white/10 flex items-center justify-center text-xs font-semibold'
                 >
                     SignIn
                 </Link>

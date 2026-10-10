@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { registerUser } from "../../redux/authReducers/authSlice.js";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 
 
 const SignIn = () => {
 
-  const dispatch=useDispatch()
+  const dispatch = useDispatch()
   const navigate = useNavigate()
+  const location = useLocation()
   const { user } = useSelector((state) => state.auth)
+
+  const destination = location.state?.from?.pathname || '/dashboard';
 
   useEffect(() => {
     if (user) {
-      navigate('/dashboard')
+      navigate(destination, { replace: true })
     }
-  }, [user, navigate])
+  }, [user, navigate, destination])
 
   const [formData, setFormData] = useState({
     name: "",

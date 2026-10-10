@@ -16,10 +16,6 @@ const router = express.Router()
 router.post(
     "/create",
     authMiddleware,
-    roleMiddleware(
-        "interviewer",
-        "admin"
-    ),
     interviewController.createInterview
 )
 
@@ -76,10 +72,6 @@ router.delete(
 router.post(
     '/:id/add-question',
     authMiddleware,
-    roleMiddleware(
-        "interviewer",
-        "admin"
-    ),
     interviewController.addQuestion
 )
 
@@ -87,11 +79,17 @@ router.post(
 
 /** 
 *
-*  @route POST /api/interview/:roomId by id"
+*  @route POST /api/interview/:roomId"
 *  @description join the room for interview 
 *
 */
 
+
+router.post(
+    '/:roomId',
+    authMiddleware,
+    interviewController.joinInterview
+)
 
 router.post(
     '/:roomid',

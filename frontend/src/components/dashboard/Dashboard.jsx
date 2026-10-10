@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { fetchMyInterviews } from '../../redux/slices/interviewSlice';
 import MainLayout from '../layout/MainLayout';
 import InterviewList from './InterviewList';
-import { FiPlus, FiVideo, FiCode, FiUsers, FiLoader } from 'react-icons/fi';
+import JoinRoomModal, { extractRoomId } from '../interviews/JoinRoomModal';
+import { FiPlus, FiVideo, FiCode, FiUsers, FiLoader, FiLogIn, FiLink } from 'react-icons/fi';
 
 const Dashboard = () => {
     const dispatch = useDispatch();
@@ -15,10 +16,20 @@ const Dashboard = () => {
     );
 
     const currentUser = useSelector((state) => state.auth?.user);
+    const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
+    const [quickRoomId, setQuickRoomId] = useState('');
 
     useEffect(() => {
         dispatch(fetchMyInterviews());
     }, [dispatch]);
+
+    const handleQuickJoin = (e) => {
+        e?.preventDefault();
+        const cleanId = extractRoomId(quickRoomId);
+        if (cleanId) {
+            navigate(`/interview/${cleanId}`);
+        }
+    };
 
     return (
         <MainLayout>
@@ -43,17 +54,52 @@ const Dashboard = () => {
                             </p>
                         </div>
 
+                        <div className="flex flex-wrap items-center gap-3">
+                            <button
+                                onClick={() => setIsJoinModalOpen(true)}
+                                className="bg-[#1a1919] hover:bg-[#262626] border border-white/10 text-white px-5 py-3 rounded-full text-xs font-bold tracking-wide transition-all flex items-center space-x-2 cursor-pointer shadow-lg"
+                            >
+                                <FiLogIn className="w-4 h-4 text-primary" />
+                                <span>Join Room by ID</span>
+                            </button>
+
+                            <button
+                                onClick={() => navigate('/create-interview')}
+                                className="bg-neon-gradient hover:opacity-90 text-white px-6 py-3 rounded-full text-xs font-bold tracking-wide transition-all shadow-[0_0_32px_rgba(46,91,255,0.3)] flex items-center space-x-2 cursor-pointer"
+                            >
+                                <FiPlus className="w-4 h-4" />
+                                <span>Create Interview</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Quick Join Input Box */}
+                    <div className="mt-6 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center gap-3">
+                        <div className="flex-1 w-full relative">
+                            <input
+                                type="text"
+                                value={quickRoomId}
+                                onChange={(e) => setQuickRoomId(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') handleQuickJoin();
+                                }}
+                                placeholder="Paste Room ID or full Invite Link here to join directly..."
+                                className="w-full bg-[#0e0e0e] border border-white/10 rounded-2xl py-3 px-4 pl-10 text-white text-xs placeholder-gray-500 focus:outline-none focus:border-primary transition-colors font-mono"
+                            />
+                            <FiLink className="absolute left-3.5 top-3.5 text-gray-500 w-4 h-4" />
+                        </div>
                         <button
-                            onClick={() => navigate('/create-interview')}
-                            className="bg-neon-gradient hover:opacity-90 text-white px-6 py-3.5 rounded-full text-xs font-bold tracking-wide transition-all shadow-[0_0_32px_rgba(46,91,255,0.3)] flex items-center space-x-2 self-start md:self-auto cursor-pointer"
+                            onClick={handleQuickJoin}
+                            disabled={!quickRoomId.trim()}
+                            className="w-full sm:w-auto bg-[#1a1919] hover:bg-primary hover:text-white border border-white/10 text-gray-200 px-6 py-3 rounded-2xl text-xs font-bold transition-all disabled:opacity-40 cursor-pointer flex items-center justify-center space-x-1.5"
                         >
-                            <FiPlus className="w-4 h-4" />
-                            <span>Create Interview</span>
+                            <FiLogIn className="w-3.5 h-3.5" />
+                            <span>Quick Join</span>
                         </button>
                     </div>
 
                     {/* Stats Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8 pt-6 border-t border-white/5">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6 pt-6 border-t border-white/5">
                         <div className="bg-[#0e0e0e] border border-white/5 rounded-2xl p-4 flex items-center space-x-4">
                             <div className="w-10 h-10 rounded-xl bg-primary/20 text-primary flex items-center justify-center">
                                 <FiVideo className="w-5 h-5" />
@@ -109,6 +155,11 @@ const Dashboard = () => {
                     )}
                 </div>
             </div>
+
+            <JoinRoomModal
+                isOpen={isJoinModalOpen}
+                onClose={() => setIsJoinModalOpen(false)}
+            />
         </MainLayout>
     );
 };

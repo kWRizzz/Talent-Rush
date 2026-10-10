@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MainLayout from '../../components/layout/MainLayout';
 import { getMyInterviews, deleteInterview } from '../../services/interview.service';
+import JoinRoomModal from '../../components/interviews/JoinRoomModal';
 import {
   FiVideo,
   FiCopy,
@@ -11,12 +12,16 @@ import {
   FiCalendar,
   FiLoader,
   FiLayers,
+  FiLogIn,
+  FiShare2,
 } from 'react-icons/fi';
 
 const MyInterviews = () => {
   const [interviews, setInterviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [copiedId, setCopiedId] = useState(null);
+  const [copiedLinkId, setCopiedLinkId] = useState(null);
+  const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const fetchInterviews = async () => {
@@ -39,6 +44,14 @@ const MyInterviews = () => {
     navigator.clipboard.writeText(roomId);
     setCopiedId(roomId);
     setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  const handleCopyLink = (roomId, e) => {
+    e?.stopPropagation();
+    const url = `${window.location.origin}/interview/${roomId}`;
+    navigator.clipboard.writeText(url);
+    setCopiedLinkId(roomId);
+    setTimeout(() => setCopiedLinkId(null), 2000);
   };
 
   const handleDelete = async (id, e) => {
@@ -67,13 +80,23 @@ const MyInterviews = () => {
             </p>
           </div>
 
-          <button
-            onClick={() => navigate('/create-interview')}
-            className="bg-neon-gradient hover:opacity-90 text-white px-5 py-2.5 rounded-full text-xs font-bold tracking-wide transition-all shadow-[0_0_24px_rgba(46,91,255,0.3)] flex items-center space-x-2 cursor-pointer"
-          >
-            <FiPlus className="w-4 h-4" />
-            <span>Create Interview</span>
-          </button>
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={() => setIsJoinModalOpen(true)}
+              className="bg-[#1a1919] hover:bg-[#262626] border border-white/10 text-white px-4 py-2.5 rounded-full text-xs font-bold tracking-wide transition-all flex items-center space-x-2 cursor-pointer shadow-lg"
+            >
+              <FiLogIn className="w-3.5 h-3.5 text-primary" />
+              <span>Join by ID</span>
+            </button>
+
+            <button
+              onClick={() => navigate('/create-interview')}
+              className="bg-neon-gradient hover:opacity-90 text-white px-5 py-2.5 rounded-full text-xs font-bold tracking-wide transition-all shadow-[0_0_24px_rgba(46,91,255,0.3)] flex items-center space-x-2 cursor-pointer"
+            >
+              <FiPlus className="w-4 h-4" />
+              <span>Create Interview</span>
+            </button>
+          </div>
         </div>
 
         {/* Content */}
@@ -119,9 +142,15 @@ const MyInterviews = () => {
                     </button>
                   </div>
 
-                  <h3 className="text-base font-bold text-white group-hover:text-primary transition-colors line-clamp-1 mb-2">
+                  <h3 className="text-base font-bold text-white group-hover:text-primary transition-colors line-clamp-1 mb-1">
                     {item.title}
                   </h3>
+
+                  {item.candidateName && (
+                    <p className="text-xs text-gray-400 mb-2">
+                      Candidate: <span className="text-gray-200 font-medium">{item.candidateName}</span>
+                    </p>
+                  )}
 
                   {/* Room ID card */}
                   <div className="bg-[#0e0e0e] border border-white/5 rounded-xl p-2.5 flex items-center justify-between mb-4">
@@ -129,16 +158,37 @@ const MyInterviews = () => {
                       <span className="text-gray-500 mr-1.5">Room:</span>
                       <span className="font-mono text-gray-200 font-bold">{item.roomId}</span>
                     </div>
-                    <button
-                      onClick={() => handleCopy(item.roomId)}
-                      className="text-gray-400 hover:text-white transition-colors cursor-pointer"
-                    >
-                      {copiedId === item.roomId ? (
-                        <FiCheck className="w-3.5 h-3.5 text-emerald-400" />
-                      ) : (
-                        <FiCopy className="w-3.5 h-3.5" />
-                      )}
-                    </button>
+                    <div className="flex items-center space-x-1.5">
+                      <button
+                        onClick={(e) => handleCopyLink(item.roomId, e)}
+                        title="Copy full invite link"
+                        className="text-xs text-gray-400 hover:text-primary transition-colors p-1 cursor-pointer flex items-center space-x-1 bg-white/5 hover:bg-white/10 px-2 py-0.5 rounded-md"
+                      >
+                        {copiedLinkId === item.roomId ? (
+                          <>
+                            <FiCheck className="w-3 h-3 text-emerald-400" />
+                            <span className="text-[10px] text-emerald-400">Copied!</span>
+                          </>
+                        ) : (
+                          <>
+                            <FiShare2 className="w-3 h-3" />
+                            <span className="text-[10px]">Link</span>
+                          </>
+                        )}
+                      </button>
+
+                      <button
+                        onClick={() => handleCopy(item.roomId)}
+                        title="Copy Room ID"
+                        className="text-gray-400 hover:text-white transition-colors p-1 cursor-pointer"
+                      >
+                        {copiedId === item.roomId ? (
+                          <FiCheck className="w-3.5 h-3.5 text-emerald-400" />
+                        ) : (
+                          <FiCopy className="w-3.5 h-3.5" />
+                        )}
+                      </button>
+                    </div>
                   </div>
                 </div>
 
@@ -162,6 +212,11 @@ const MyInterviews = () => {
           </div>
         )}
       </div>
+
+      <JoinRoomModal
+        isOpen={isJoinModalOpen}
+        onClose={() => setIsJoinModalOpen(false)}
+      />
     </MainLayout>
   );
 };

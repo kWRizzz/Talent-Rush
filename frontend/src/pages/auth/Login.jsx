@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../redux/authReducers/authSlice";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { FiMail, FiLock, FiArrowRight, FiLoader } from "react-icons/fi";
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, isLoading, error } = useSelector((state) => state.auth);
+
+  const destination = location.state?.from?.pathname || '/dashboard';
 
   useEffect(() => {
     if (user) {
-      navigate('/dashboard');
+      navigate(destination, { replace: true });
     }
-  }, [user, navigate]);
+  }, [user, navigate, destination]);
 
   const [formData, setFormData] = useState({
     email: "",

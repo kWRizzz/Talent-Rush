@@ -240,14 +240,14 @@ const VideoPanel = ({ interviewId }) => {
   return (
     <div className="flex flex-col h-full bg-[#131313] border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
       {/* Header */}
-      <div className="px-4 py-3 bg-[#1a1919] border-b border-white/10 flex items-center justify-between">
+      <div className="px-4 py-2.5 bg-[#1a1919] border-b border-white/10 flex items-center justify-between shrink-0">
         <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary">
-            <FiVideo className="w-4 h-4" />
+          <div className="w-7 h-7 rounded-lg bg-primary/20 flex items-center justify-center text-primary">
+            <FiVideo className="w-3.5 h-3.5" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-white">Live Video Call</h3>
-            <p className="text-[11px] text-gray-400">Peer-to-Peer WebRTC</p>
+            <h3 className="text-xs font-semibold text-white">Live Video Call</h3>
+            <p className="text-[10px] text-gray-400">Peer-to-Peer WebRTC</p>
           </div>
         </div>
 
@@ -262,7 +262,7 @@ const VideoPanel = ({ interviewId }) => {
           </span>
           <button
             onClick={handleConnect}
-            className="text-xs bg-neon-gradient hover:opacity-90 text-white px-3 py-1.5 rounded-lg font-medium transition-all shadow-[0_0_16px_rgba(46,91,255,0.25)] flex items-center space-x-1 cursor-pointer"
+            className="text-xs bg-neon-gradient hover:opacity-90 text-white px-3 py-1 rounded-lg font-medium transition-all shadow-[0_0_16px_rgba(46,91,255,0.25)] flex items-center space-x-1 cursor-pointer"
           >
             <FiPhoneCall className="w-3 h-3" />
             <span>Connect</span>
@@ -271,33 +271,33 @@ const VideoPanel = ({ interviewId }) => {
       </div>
 
       {/* Video Tiles Grid */}
-      <div className="flex-1 p-3 grid grid-cols-1 sm:grid-cols-2 gap-3 min-h-[200px]">
+      <div className="flex-1 min-h-0 p-2 sm:p-2.5 grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
         {/* Local Participant Tile */}
-        <div className="relative rounded-xl overflow-hidden bg-[#0e0e0e] border border-white/10 flex items-center justify-center aspect-video sm:aspect-auto">
+        <div className="relative rounded-xl overflow-hidden bg-[#0e0e0e] border border-white/10 flex items-center justify-center h-full min-h-0 w-full">
           <video
             ref={videoRef}
             autoPlay
             playsInline
             muted
-            className={`w-full h-full object-cover ${!isCameraOn ? 'hidden' : ''}`}
+            className={`w-full h-full object-cover rounded-xl ${!isCameraOn ? 'hidden' : ''}`}
           />
           {!isCameraOn && (
             <div className="flex flex-col items-center justify-center text-gray-500">
-              <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-gray-400 mb-1">
-                <FiUser className="w-6 h-6" />
+              <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 mb-1">
+                <FiUser className="w-5 h-5" />
               </div>
               <span className="text-xs">Camera is Off</span>
             </div>
           )}
 
           {/* Overlay Tag */}
-          <div className="absolute bottom-2 left-2 px-2.5 py-1 rounded-md bg-black/70 backdrop-blur text-[11px] text-white flex items-center space-x-1.5 border border-white/10">
+          <div className="absolute bottom-2 left-2 px-2.5 py-0.5 rounded-md bg-black/70 backdrop-blur text-[10px] text-white flex items-center space-x-1.5 border border-white/10">
             <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
             <span>You</span>
           </div>
 
           {/* Quick tile controls */}
-          <div className="absolute bottom-2 right-2 flex items-center space-x-1.5">
+          <div className="absolute bottom-2 right-2 flex items-center space-x-1">
             <button
               onClick={toggleMic}
               className={`p-1.5 rounded-md border text-xs transition-colors cursor-pointer ${
@@ -306,7 +306,7 @@ const VideoPanel = ({ interviewId }) => {
                   : 'bg-rose-500/80 text-white border-rose-500'
               }`}
             >
-              {isMicOn ? <FiMic className="w-3.5 h-3.5" /> : <FiMicOff className="w-3.5 h-3.5" />}
+              {isMicOn ? <FiMic className="w-3 h-3" /> : <FiMicOff className="w-3 h-3 text-white" />}
             </button>
             <button
               onClick={toggleCamera}
@@ -316,23 +316,23 @@ const VideoPanel = ({ interviewId }) => {
                   : 'bg-rose-500/80 text-white border-rose-500'
               }`}
             >
-              {isCameraOn ? <FiVideo className="w-3.5 h-3.5" /> : <FiVideoOff className="w-3.5 h-3.5" />}
+              {isCameraOn ? <FiVideo className="w-3 h-3" /> : <FiVideoOff className="w-3 h-3 text-white" />}
             </button>
           </div>
         </div>
 
         {/* Remote Participant Tile */}
-        <div className="relative rounded-xl overflow-hidden bg-[#0e0e0e] border border-white/10 flex items-center justify-center aspect-video sm:aspect-auto">
+        <div className="relative rounded-xl overflow-hidden bg-[#0e0e0e] border border-white/10 flex items-center justify-center h-full min-h-0 w-full">
           <video
             ref={remoteVideoRef}
             autoPlay
             playsInline
-            className={`w-full h-full object-cover ${!hasRemoteVideo ? 'hidden' : ''}`}
+            className={`w-full h-full object-cover rounded-xl ${!hasRemoteVideo ? 'hidden' : ''}`}
           />
           {!hasRemoteVideo && (
-            <div className="flex flex-col items-center justify-center text-gray-500 text-center p-4">
-              <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-gray-400 mb-2">
-                <FiUser className="w-6 h-6" />
+            <div className="flex flex-col items-center justify-center text-gray-500 text-center p-3">
+              <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 mb-1.5">
+                <FiUser className="w-5 h-5" />
               </div>
               <span className="text-xs text-gray-400 font-medium">Waiting for participant...</span>
               <span className="text-[10px] text-gray-600 mt-0.5">
@@ -342,7 +342,7 @@ const VideoPanel = ({ interviewId }) => {
           )}
 
           {/* Overlay Tag */}
-          <div className="absolute bottom-2 left-2 px-2.5 py-1 rounded-md bg-black/70 backdrop-blur text-[11px] text-white flex items-center space-x-1.5 border border-white/10">
+          <div className="absolute bottom-2 left-2 px-2.5 py-0.5 rounded-md bg-black/70 backdrop-blur text-[10px] text-white flex items-center space-x-1.5 border border-white/10">
             <span
               className={`w-2 h-2 rounded-full ${
                 hasRemoteVideo ? 'bg-emerald-400' : 'bg-gray-500'
