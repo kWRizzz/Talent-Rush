@@ -57,9 +57,27 @@ const VideoPanel = ({ interviewId }) => {
       }
       socket.on("answer", handleAnswer)
 
+      const handleIceCandidate = async ({ candidate }) => {
+        try {
+          const peer = getPeerConnection();
+          if (!peer || !peer.setRemoteDescription) {
+            console.warn("Peer or remote description not ready");
+            return;
+          }
+          await peer.addIceCandidate(
+            new RTCIceCandidate(candidate)
+          );
+
+          console.log("Remote ICE candidate added");
+        } catch (error) {
+          console.log(error + 'error in ice');
+        }
+      }
+      socket.on("ice-candidate", handleIceCandidate);
       return () => {
         socket.off("offer", handleOffer);
-        socket.off("answer",handleAnswer);
+        socket.off("answer", handleAnswer);
+        socket.off("ice-candidate", handleIceCandidate);
       }
     }
 
@@ -67,7 +85,7 @@ const VideoPanel = ({ interviewId }) => {
 
 
   const videoRef = useRef(null);
-
+  const remoteVideoRef = useRef(null);
   useEffect(() => {
 
     const startCamera = async () => {
@@ -77,14 +95,24 @@ const VideoPanel = ({ interviewId }) => {
           videoRef.current.srcObject = stream;
         }
 
-        const peer=getPeerConnection();
-        const socket=getSocket();
-        if(peer){
-          peer.onicecandidate =(event)=>{
-            if(event.candidate){
-              socket.emit("ice-candidate",{
+        const peer = getPeerConnection();
+        const socket = getSocket();
+
+        if (peer) {
+          peer.ontrack = (event) => {
+            const [remoteStream] = event.streams;
+
+            if (remoteVideoRef.current && remoteStream) {
+              remoteVideoRef.current.srcObject = remoteStream;
+            }
+          };
+        }
+        if (peer) {
+          peer.onicecandidate = (event) => {
+            if (event.candidate) {
+              socket.emit("ice-candidate", {
                 interviewId,
-                candidate:event.candidate
+                candidate: event.candidate
               })
             }
           }
@@ -108,6 +136,13 @@ const VideoPanel = ({ interviewId }) => {
         playsInline
         muted
         className="w-full"
+      />
+
+      <video
+        ref={remoteVideoRef}
+        autoPlay
+        playsInline
+        className="w-full rounded"
       />
       <button
         onClick={handleOffer}
