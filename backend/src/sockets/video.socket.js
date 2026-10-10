@@ -17,6 +17,8 @@ const videoSocket= (io,socket)=>{
         }
     )
 
+    
+
     socket.on(
         ANSWER,
         ({roomId,answer})=>{
@@ -45,6 +47,20 @@ const videoSocket= (io,socket)=>{
             socket.to(targetId).emit("answer",{
                 answer,
                 senderId:socket.roomId
+            })
+        }
+    )
+
+    socket.on(
+        "ice-cadidate",
+        ({interviewId,candidate,targetId})=>{
+            if(!candidate || !targetId){
+                return
+            }
+
+            socket.to(targetId).emit("ice-candidate",{
+                candidate,
+                senderId: socket.id,
             })
         }
     )
