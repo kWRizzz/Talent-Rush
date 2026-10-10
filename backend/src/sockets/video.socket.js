@@ -1,125 +1,78 @@
-const {
-    OFFER,
-    ANSWER,
-    ICE_CANDIDATE
-} = require('./constants')
-
+/**
+ * Video Socket Handler
+ * Relays WebRTC signaling (Offer, Answer, ICE candidates) between peers
+ */
 
 const videoSocket = (io, socket) => {
 
-    socket.on(
-        OFFER,
-        ({ roomId, offer }) => {
-            socket.to(roomId).emit(
-                OFFER,
-                { offer }
-            )
-        }
-    )
+    socket.on("offer", ({ interviewId, roomId, offer }) => {
+        const targetRoom = interviewId || roomId || socket.roomId;
+        if (!targetRoom || !offer) return;
 
+        socket.to(targetRoom).emit("offer", {
+            offer,
+            senderId: socket.id
+        });
+    });
 
+    socket.on("answer", ({ interviewId, roomId, answer, targetId }) => {
+        if (!answer) return;
 
-    socket.on(
-        ANSWER,
-        ({ roomId, answer }) => {
-            socket.to(roomId).emit(
-                ANSWER,
-                { answer }
-            )
-        }
-    )
-
-    socket.on(
-        ICE_CANDIDATE,
-        ({ roomId, candidate }) => {
-            ICE_CANDIDATE,
-                { candidate }
-        }
-    )
-
-    socket.on(
-        "answer",
-        ({ interviewId, answer, targetId }) => {
-            if (!targetId || !answer) {
-                return
-            }
-
+        if (targetId) {
             socket.to(targetId).emit("answer", {
                 answer,
-                senderId: socket.roomId
-            })
-        }
-    )
-
-    socket.on(
-        "ice-cadidate",
-        ({ interviewId, candidate, targetId }) => {
-            if (!candidate || !targetId) {
-                return
+                senderId: socket.id
+            });
+        } else {
+            const targetRoom = interviewId || roomId || socket.roomId;
+            if (targetRoom) {
+                socket.to(targetRoom).emit("answer", {
+                    answer,
+                    senderId: socket.id
+                });
             }
+        }
+    });
 
+    socket.on("ice-candidate", ({ interviewId, roomId, candidate, targetId }) => {
+        if (!candidate) return;
+
+        if (targetId) {
             socket.to(targetId).emit("ice-candidate", {
                 candidate,
-                senderId: socket.id,
-            })
-        }
-    )
-
-    socket.on(
-        "offer", ({ interviewId, offer }) => {
-            socket.to(interviewId).emit("offer", {
-                offer,
-                senderId: socket.roomId
-            })
-        }
-    )
-
-    socket.on(
-        "answer", ({ answer, targetId }) => {
-            if (!answer || !targetId) {
-                console.warn("Answer or targetId missing");
-                return
+                senderId: socket.id
+            });
+        } else {
+            const targetRoom = interviewId || roomId || socket.roomId;
+            if (targetRoom) {
+                socket.to(targetRoom).emit("ice-candidate", {
+                    candidate,
+                    senderId: socket.id
+                });
             }
-            socket.to(targetId).emit("answer", {
-                answer,
-                senderId: socket.roomId
-            })
-
         }
-    )
+    });
 
-
-    socket.on(
-        "ice-candidate",
-        ({ candidate, targetId }) => {
-            if (!candidate || !targetId) {
-                console.warn("ICE candidate or targetId missing");
-                return;
-            }
-
-            socket.to(targetId).emit("ice-candidate", {
-                candidate,
+    socket.on("camera-toggle", ({ enabled, interviewId, roomId }) => {
+        const targetRoom = interviewId || roomId || socket.roomId;
+        if (targetRoom) {
+            socket.to(targetRoom).emit("peer-camera-toggle", {
                 senderId: socket.id,
+                enabled
             });
         }
-    );
+    });
 
-}
-
-const registerVideoSocket = async (io, socket) => {
-    socket.on(
-        OFFER, ({ interviewId, offer }) => {
-            socket.to(interviewId).emit(OFFER, {
-                offer,
-                senderId: socket.roomId
-            })
+    socket.on("mic-toggle", ({ enabled, interviewId, roomId }) => {
+        const targetRoom = interviewId || roomId || socket.roomId;
+        if (targetRoom) {
+            socket.to(targetRoom).emit("peer-mic-toggle", {
+                senderId: socket.id,
+                enabled
+            });
         }
-    )
-}
-module.exports = {
-    videoSocket,
-    registerVideoSocket
+    });
+};
 
-
-
-}
+module.exports = videoSocket;
+module.exports.videoSocket = videoSocket;

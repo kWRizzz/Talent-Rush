@@ -23,22 +23,27 @@ const addQuestionToInterview = async (
     interviewId,
     questionId
 ) => {
-    const interview= await interviewModel.findById(
-        interviewId
-    )
-
-    if(!interview) {
-        throw new Error(
-            "INterview not found"
-        )
+    const mongoose = require('mongoose');
+    let interview = null;
+    if (mongoose.Types.ObjectId.isValid(interviewId)) {
+        interview = await interviewModel.findById(interviewId);
+    }
+    if (!interview) {
+        interview = await interviewModel.findOne({ roomId: interviewId });
     }
 
-    interview.questions.push(
-        questionId
-    )
-    await interview.save()
-   
-    return interview 
+    if (!interview) {
+        throw new Error("Interview not found");
+    }
+
+    const alreadyExists = interview.questions.some(q => q.toString() === questionId.toString());
+    if (!alreadyExists) {
+        interview.questions.push(questionId);
+        await interview.save();
+    }
+
+    await interview.populate("questions");
+    return interview;
 }
 
 module.exports={

@@ -1,48 +1,82 @@
-import React from 'react'
-import{
-    useDispatch,
-    useSelector
-}from "react-redux"
-import { selectedQuestion as selectQuestion } from '../../redux/slices/questionSlice'
-import { setCode } from '../../redux/slices/editorSlice'
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectedQuestion as selectQuestion } from '../../redux/slices/questionSlice';
+import { setCode, clearTestResults } from '../../redux/slices/editorSlice';
+import { getSocket } from '../../services/socket.service';
 
+const QuestionCard = ({ question, index, interviewId }) => {
+    const dispatch = useDispatch();
 
-const QuestionCard = ({ question, index }) => {
-    const dispatch= useDispatch();
+    const { selectedQuestion } = useSelector(
+        (state) => state.question
+    );
 
-    const {selectedQuestion}= useSelector(
-        (state)=>state.question
-    )
+    const isSelected = selectedQuestion?._id === question._id;
 
-    const isSelected= selectedQuestion?._id===question._id
+    const handleSelect = () => {
+        dispatch(selectQuestion(question));
+        dispatch(clearTestResults());
+        if (question.starterCode) {
+            dispatch(setCode(question.starterCode));
+        }
 
-    const handleSelect= () => {
-        dispatch(
-            selectQuestion(question)
-        )
-        dispatch(
-            setCode(question.starterCode || "")
-        )
-    }
+        // Notify other participants in the room
+        const socket = getSocket();
+        if (socket && interviewId) {
+            socket.emit("question-selected", {
+                interviewId,
+                question
+            });
+        }
+    };
+
+    const difficultyColors = {
+        easy: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+        medium: "bg-amber-500/10 text-amber-400 border-amber-500/20",
+        hard: "bg-rose-500/10 text-rose-400 border-rose-500/20"
+    };
+
+    const diff = (question.difficulty || "medium").toLowerCase();
 
     return (
         <div
             onClick={handleSelect}
-            className={`border p-3 rounded cursor-pointer ${
-                isSelected?
-                "border-blue-500"
-                :""
+            className={`p-3.5 rounded-xl cursor-pointer transition-all border ${
+                isSelected
+                    ? "bg-[#1f1d2b] border-primary shadow-[0_0_20px_rgba(46,91,255,0.25)]"
+                    : "bg-[#181818] border-white/5 hover:border-white/20 hover:bg-[#202020]"
             }`}
-
         >
-            <p className="font-medium">
-                {index+1}.{question.title}
-            </p>
-            <p className="text-sm mt-2">
+            <div className="flex items-center justify-between mb-1.5">
+                <span className="text-xs font-semibold text-white tracking-wide">
+                    {question.title}
+                </span>
+                <span
+                    className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${
+                        difficultyColors[diff] || difficultyColors.medium
+                    }`}
+                >
+                    {question.difficulty || "Medium"}
+                </span>
+            </div>
+
+            <p className="text-[11px] text-gray-400 line-clamp-2 leading-relaxed">
                 {question.description}
             </p>
-        </div>  
-    )
-}
 
-export default QuestionCard
+            <div className="mt-2.5 flex items-center justify-between text-[10px] text-gray-500 pt-2 border-t border-white/5">
+                <span>
+                    {question.testCases?.length || 0} Test Cases
+                </span>
+                {isSelected && (
+                    <span className="text-primary font-medium flex items-center">
+                        <span className="w-1.5 h-1.5 rounded-full bg-primary mr-1 animate-pulse"></span>
+                        Active in Editor
+                    </span>
+                )}
+            </div>
+        </div>
+    );
+};
+
+export default QuestionCard;

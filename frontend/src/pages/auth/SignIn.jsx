@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { registerUser } from "../../redux/authReducers/authSlice.js";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 
 const SignIn = () => {
@@ -111,9 +111,9 @@ const SignIn = () => {
 
           <p className="text-gray-400 text-sm text-center mt-4">
             Already have an account?{" "}
-            <span className="text-pink-400 cursor-pointer hover:underline">
+            <Link to="/login" className="text-primary hover:text-white font-medium hover:underline transition-colors">
               Sign In
-            </span>
+            </Link>
           </p>
         </div>
       </div>

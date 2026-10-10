@@ -21,6 +21,9 @@ router.post(
     compilerController.executeCode
 )
 
-
+router.post(
+    '/test',
+    compilerController.executeTestCases
+)
 
 module.exports=router

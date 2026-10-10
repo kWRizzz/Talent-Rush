@@ -38,6 +38,20 @@ const questionSchema = new mongoose.Schema({
     ],
     constraints:[
         String
+    ],
+    starterCode: {
+        type: String,
+        default: ""
+    },
+    starterCodes: {
+        type: mongoose.Schema.Types.Mixed,
+        default: {}
+    },
+    leetcodeId: {
+        type: Number
+    },
+    topicTags: [
+        String
     ]
 },
     {

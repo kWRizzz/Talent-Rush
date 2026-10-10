@@ -80,13 +80,13 @@ const getQuestionsById= async (
     res
 ) => {
     try {
-        if(!req.param.id) return res.status(400).json({
+        if(!req.params.id) return res.status(400).json({
             message:"no id in question fetching",
             success:false
         })
 
         const question= await questionModel.findById(
-            req.param.id
+            req.params.id
         )
 
         if(!question){
@@ -105,16 +105,142 @@ const getQuestionsById= async (
             success:true
         })
     } catch (error) {
-        console.log(`cant fetch your questions by hte id son ${error}`);
+        console.log(`cant fetch your questions by the id: ${error}`);
         res.status(404).json({
-            message:`cant fetch question son by id ${error}`,
+            message:`cant fetch question by id: ${error}`,
             success:false
         })
     }
 }
 
+const {
+    fetchLeetCodeByNumber,
+    getCuratedProblemsList
+} = require('../services/leetcode.service');
+const { addQuestionToInterview } = require('../services/interview.service');
+
+const getLeetCodeQuestion = async (req, res) => {
+    try {
+        const { number } = req.params;
+        const questionData = await fetchLeetCodeByNumber(number);
+        return res.status(200).json({
+            success: true,
+            question: questionData
+        });
+    } catch (error) {
+        return res.status(400).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+const getCuratedLeetCodeList = async (req, res) => {
+    try {
+        const list = getCuratedProblemsList();
+        return res.status(200).json({
+            success: true,
+            problems: list
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+const addLeetCodeToInterview = async (req, res) => {
+    try {
+        const { interviewId, questionNumber } = req.body;
+        if (!interviewId || !questionNumber) {
+            return res.status(400).json({
+                success: false,
+                message: "interviewId and questionNumber are required"
+            });
+        }
+
+        // Fetch LeetCode details
+        const lcData = await fetchLeetCodeByNumber(questionNumber);
+
+        // Check if question already exists in DB with this leetcodeId or title
+        let question = await questionModel.findOne({
+            $or: [
+                { leetcodeId: lcData.leetcodeId },
+                { title: lcData.title },
+                { title: `${lcData.leetcodeId}. ${lcData.title}` }
+            ]
+        });
+
+        if (!question) {
+            question = await questionModel.create({
+                title: `${lcData.leetcodeId}. ${lcData.title}`,
+                difficulty: lcData.difficulty,
+                description: lcData.description,
+                starterCode: lcData.starterCode,
+                starterCodes: lcData.starterCodes || {},
+                testCases: lcData.testCases || [],
+                example: lcData.example || [],
+                constraints: lcData.constraints || [],
+                leetcodeId: lcData.leetcodeId,
+                topicTags: lcData.topicTags || [],
+                createdBy: req.user?.userId
+            });
+        } else {
+            // Update question if description, testCases or starterCode were missing or empty
+            let modified = false;
+            if (!question.description || question.description.length < 50) {
+                question.description = lcData.description;
+                modified = true;
+            }
+            if ((!question.testCases || question.testCases.length === 0) && lcData.testCases?.length > 0) {
+                question.testCases = lcData.testCases;
+                modified = true;
+            }
+            if (!question.starterCode && lcData.starterCode) {
+                question.starterCode = lcData.starterCode;
+                modified = true;
+            }
+            if (!question.starterCodes && lcData.starterCodes) {
+                question.starterCodes = lcData.starterCodes;
+                modified = true;
+            }
+            if ((!question.example || question.example.length === 0) && lcData.example?.length > 0) {
+                question.example = lcData.example;
+                modified = true;
+            }
+            if (question.leetcodeId !== lcData.leetcodeId) {
+                question.leetcodeId = lcData.leetcodeId;
+                modified = true;
+            }
+            if (modified) {
+                await question.save();
+            }
+        }
+
+        // Add to interview
+        const interview = await addQuestionToInterview(interviewId, question._id);
+
+        return res.status(200).json({
+            success: true,
+            message: `Added LeetCode #${lcData.leetcodeId}: ${lcData.title}`,
+            question,
+            interview
+        });
+    } catch (error) {
+        console.error("Error adding LeetCode question to interview:", error);
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
 module.exports={
     createQuestion,
     getQuestions,
-    getQuestionsById
+    getQuestionsById,
+    getLeetCodeQuestion,
+    getCuratedLeetCodeList,
+    addLeetCodeToInterview
 }

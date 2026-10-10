@@ -1,18 +1,17 @@
-import React from 'react'
+import React from 'react';
 import {
     BrowserRouter,
     Routes,
     Route
-} from "react-router-dom"
-import LandingPage from '../pages/home/LandingPage'
-import Login from '../pages/auth/Login'
-import SignIn from '../pages/auth/SignIn'
-import Dashboard from '../pages/dashboard/Dashboard'
-import CreateInterview from '../pages/dashboard/CreateInterview'
-import MyInterviews from '../pages/dashboard/MyInterviews'
-import InterviewRoom from '../pages/interview/InterviewRoom'
-import ProtectedRoute from './ProtectedRoute'
-
+} from "react-router-dom";
+import LandingPage from '../pages/home/LandingPage';
+import Login from '../pages/auth/Login';
+import SignIn from '../pages/auth/SignIn';
+import Dashboard from '../pages/dashboard/Dashboard';
+import CreateInterview from '../pages/dashboard/CreateInterview';
+import MyInterviews from '../pages/dashboard/MyInterviews';
+import InterviewRoom from '../pages/interview/InterviewRoom';
+import ProtectedRoute from './ProtectedRoute';
 
 const AppRoutes = () => {
     return (
@@ -47,7 +46,39 @@ const AppRoutes = () => {
                     }
                 />
                 <Route
+                    path='/interview'
+                    element={
+                        <ProtectedRoute>
+                            <CreateInterview />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path='/features/CreateInterview'
+                    element={
+                        <ProtectedRoute>
+                            <CreateInterview />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
                     path='/my-interviews'
+                    element={
+                        <ProtectedRoute>
+                            <MyInterviews />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path='/my-interview'
+                    element={
+                        <ProtectedRoute>
+                            <MyInterviews />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path='/features/MyInterviews'
                     element={
                         <ProtectedRoute>
                             <MyInterviews />
@@ -64,7 +95,7 @@ const AppRoutes = () => {
                 />
             </Routes>
         </BrowserRouter>
-    )
-}
+    );
+};
 
-export default AppRoutes
+export default AppRoutes;

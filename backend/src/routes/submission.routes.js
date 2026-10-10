@@ -38,4 +38,10 @@ router.get(
     submissionController.getInterviewSubmissions
 )
 
+router.get(
+    '/my',
+    authMiddleware,
+    submissionController.getMySubmissions
+)
+
 module.exports= router

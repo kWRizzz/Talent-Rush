@@ -34,11 +34,39 @@ router.get(
 
 
 /**
- *  @ROUTE GET api/question/:id
- *  @description get the all questions by the user id
+ *  @ROUTE GET api/question/leetcode/curated
+ *  @description get curated popular LeetCode questions
  */
+router.get(
+    '/leetcode/curated',
+    authMiddleware,
+    questionController.getCuratedLeetCodeList
+);
 
+/**
+ *  @ROUTE GET api/question/leetcode/:number
+ *  @description fetch LeetCode question by number
+ */
+router.get(
+    '/leetcode/:number',
+    authMiddleware,
+    questionController.getLeetCodeQuestion
+);
 
+/**
+ *  @ROUTE POST api/question/leetcode/add-to-interview
+ *  @description fetch LeetCode question and attach to interview
+ */
+router.post(
+    '/leetcode/add-to-interview',
+    authMiddleware,
+    questionController.addLeetCodeToInterview
+);
+
+/**
+ *  @ROUTE GET api/question/:id
+ *  @description get question by id
+ */
 router.get(
     '/:id',
     authMiddleware,
