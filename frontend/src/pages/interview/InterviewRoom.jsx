@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import EditorPanel from '../../components/interviews/EditorPanel';
@@ -30,7 +30,7 @@ const InterviewRoom = () => {
   const navigate = useNavigate();
 
   const currentUser = useSelector((state) => state.auth?.user);
-  const { isTesting, isRunning, isSubmitting } = useSelector(
+  const { isTesting, isRunning, isSubmitting, testResults, allPassed } = useSelector(
     (state) => state.editor
   );
 
@@ -40,12 +40,9 @@ const InterviewRoom = () => {
   const [copiedLink, setCopiedLink] = useState(false);
   const [roomParticipants, setRoomParticipants] = useState([]);
 
-  // Auto-switch top pane to Output/Test results when tests run
-  useEffect(() => {
-    if (isTesting || isRunning || isSubmitting) {
-      setTopTab('output');
-    }
-  }, [isTesting, isRunning, isSubmitting]);
+  const currentUserId = currentUser?._id || currentUser?.userId;
+  const currentUserRef = useRef(currentUser);
+  currentUserRef.current = currentUser;
 
   useEffect(() => {
     if (!roomId) return;
@@ -54,9 +51,9 @@ const InterviewRoom = () => {
     const socket = getSocket();
 
     const userInfo = {
-      name: currentUser?.name || 'Developer',
-      role: currentUser?.role || 'interviewer',
-      userId: currentUser?._id || currentUser?.userId,
+      name: currentUserRef.current?.name || 'Developer',
+      role: currentUserRef.current?.role || 'interviewer',
+      userId: currentUserId,
     };
 
     socket.emit('join-interview', {
@@ -82,7 +79,7 @@ const InterviewRoom = () => {
       });
       disconnectSocket();
     };
-  }, [roomId, currentUser]);
+  }, [roomId, currentUserId]);
 
   useEffect(() => {
     if (roomId) {
@@ -260,16 +257,28 @@ const InterviewRoom = () => {
               >
                 <FiTerminal className="w-3.5 h-3.5" />
                 <span>Test Results & Output</span>
+                {testResults && testResults.length > 0 && (
+                  <span
+                    className={`ml-1 text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                      allPassed
+                        ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                        : 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
+                    }`}
+                  >
+                    {testResults.filter((r) => r.passed).length}/{testResults.length}
+                  </span>
+                )}
               </button>
             </div>
 
-            {/* Top Content Area */}
-            <div className="flex-1 min-h-0 overflow-hidden">
-              {topTab === 'video' ? (
+            {/* Top Content Area - KEEP BOTH MOUNTED TO PRESERVE WEBRTC CALL */}
+            <div className="flex-1 min-h-0 overflow-hidden relative">
+              <div className={`h-full w-full ${topTab === 'video' ? 'block' : 'hidden'}`}>
                 <VideoPanel interviewId={roomId} />
-              ) : (
+              </div>
+              <div className={`h-full w-full ${topTab === 'output' ? 'block' : 'hidden'}`}>
                 <OutputPanel />
-              )}
+              </div>
             </div>
           </div>
 
