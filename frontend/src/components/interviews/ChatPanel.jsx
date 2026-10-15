@@ -156,6 +156,9 @@ const ChatPanel = ({ interviewId }) => {
 
 
   
+
+
+  
   return (
     <div className="flex flex-col h-full bg-[#131313] border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
       {/* Header */}
